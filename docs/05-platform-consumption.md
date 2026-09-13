@@ -80,7 +80,7 @@
 | 도구 | MCP 서버 정의, 도구 스키마 버전, 작업 분류표, 승인 이력 | 승인된 네임스페이스, 도구 설명 해시 |
 | 평가셋 | 골든셋과 채점 기준, 실패 사례 | 마지막 회귀 실행 결과 |
 
-플랫폼 팀이 Tool Gallery로 도구를 중앙 관리하듯([09 9.2절](09-mcp-tools.md)), 프롬프트와 평가셋도 소유자와 버전이 있는 자산으로 다룹니다. 전사 방법론의 "학습 회수"가 이 자리입니다([AX 05](https://github.com/JaeHoYun/enterprise-ax-methodology/blob/main/docs/05-operating-model.md)).
+플랫폼 팀이 Tool Gallery로 도구를 중앙 관리하듯([09 9.2절](09-mcp-tools.md)), 프롬프트와 평가셋도 소유자와 버전이 있는 자산으로 다룹니다. 전사 방법론의 "학습 자산화"(중단되거나 기준에 못 미친 파일럿에서 배운 것을 기록해 다음 시도에 재사용하는 일)가 이 자리입니다([AX 05 5.6절](https://github.com/JaeHoYun/enterprise-ax-methodology/blob/main/docs/05-operating-model.md)).
 
 ## 5.7 로드맵 대응 — AI Gateway가 나오면 무엇이 바뀌나
 
