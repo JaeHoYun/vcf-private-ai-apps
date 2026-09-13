@@ -11,7 +11,7 @@
 - **에이전트(Agent)** — 사용자 요청에 대해 검색, 도구 호출, 종료를 스스로 판단하며 여러 단계를 잇는 워크로드. 어떤 단계를 밟을지가 입력마다 달라진다는 점이 단일 호출과 RAG와 다르다.
 - **Agent Builder** — 모델 엔드포인트, 지시문, 지식베이스, 도구, 세션을 묶어 에이전트를 구성하고 챗 컴플리션 엔드포인트로 노출하는 PAIS 모듈.
 - **MCP(Model Context Protocol)** — 모델, 에이전트가 외부 도구, 데이터에 접근하는 개방 프로토콜. PAIS는 호출, 호스팅, 등록 세 방향으로 지원한다.
-- **Tool Gallery** — MCP 서버를 조직 차원에서 중앙 등록하고 관리하는 PAIS 2.1 신규 기능.
+- **Tool Gallery** — MCP 서버를 조직 차원에서 중앙 등록하고 관리하는 PAIS 기능. PAIS 2.1에서 도입.
 - **SSE(Server-Sent Events)** — 서버가 클라이언트로 이벤트를 흘려보내는 전송 방식. MCP 연결은 Streamable HTTP 또는 SSE를 요구한다.
 - **휴먼인더루프(Human-in-the-loop)** — 되돌리기 어려운 행동 전에 사람의 확인을 두는 통제. PAIS 내장 기능은 확인되지 않아 애플리케이션 계층에서 설계한다.
 - **가드레일(Guardrail)** — 에이전트의 입출력과 행동을 제한하는 안전 통제. PAIS 맥락에서는 리소스 쿼터와 거버넌스 의미로 주로 쓰이며, 콘텐츠 가드레일은 애플리케이션 계층 설계가 필요하다.
@@ -32,7 +32,7 @@
 - **Harbor** — OCI 호환 컨테이너 레지스트리. Model Gallery의 저장소 구현.
 - **vLLM, llama.cpp, Infinity** — Model Runtime의 추론 엔진. PAIS 3.0 기준 vLLM 0.20.0(생성과 임베딩, CUDA 13.0 기본), llama.cpp b9309(CPU 추론), Infinity 0.0.76(임베딩 전용). 2.1은 vLLM 0.11.2, llama.cpp b7739. 버전 정본은 [README 기반 버전표](../README.md#기반-버전-source-of-truth).
 - **chat completion / OpenAI 호환 API** — `/chat/completions`, `/completions`, `/embeddings` 등 OpenAI 규약을 따르는 추론 API. 에이전트는 챗 컴플리션 엔드포인트로 노출된다.
-- **Artifact Mirroring Tool** — 에어갭 환경에 모델과 아티팩트를 미러링해 반입하는 PAIS 2.1 도구. pais CLI 플러그인의 `vcf pais amt pull/push` 명령으로 수행한다(VCF CLI 명령 레퍼런스에는 누락, Disconnected Environment 배포 문서에 명시).
+- **Artifact Mirroring Tool** — 에어갭 환경에 모델과 아티팩트를 미러링해 반입하는 PAIS 도구(PAIS 2.1에서 도입). pais CLI 플러그인의 `vcf pais amt pull/push` 명령으로 수행한다(VCF CLI 명령 레퍼런스에는 누락, Disconnected Environment 배포 문서에 명시).
 - **NIM(NVIDIA Inference Microservices)** — NVIDIA가 제공하는 컨테이너형 추론 모델. Model Gallery로 반입해 관리할 수 있다.
 - **공유 모델(provider / consumer)** — PAIS 3.0부터 한 인스턴스(provider)가 서빙하는 completion 또는 embedding 엔드포인트를 다른 인스턴스와 네임스페이스(consumer)가 자기 엔드포인트처럼 참조하는 방식. 지식베이스, 에이전트, 도구는 consumer 쪽에 남는다. 인스턴스 간 접근에는 provider가 발급한 API 토큰이 필요하다.
 - **원격 클라우드 모델** — PAIS 3.0부터 Google Gemini 네이티브 API, Gemini Enterprise Agent Platform(구 Vertex AI), OpenAI 호환 서비스의 모델을 `InferenceGatewayRoute` 리소스로 연결해 같은 엔드포인트 형태로 쓰는 방식. 프롬프트가 사외로 나가므로 반출 정책이 전제된다.
@@ -70,7 +70,7 @@
 
 - **BFF(Backend For Frontend)** — 클라이언트와 오케스트레이션 사이에서 사용자 인증, 세션, 요청 정형, 입력 가드를 맡는 프런트엔드 전용 백엔드. 4-Tier 골격의 두 번째 층([11 11.1절](../docs/11-app-integration-ux.md)).
 - **토큰 교환(OAuth 2.0 Token Exchange, RFC 8693)** — 사용자 토큰과 서비스 자격증명을 인가 서버에 제시해 대상 시스템용 audience와 scope를 가진 새 토큰을 받는 표준. 위임(delegation)은 `act` 클레임에 행위자를 남기고, 가장(impersonation)은 사용자와 구별되지 않는다([04 4.3절](../docs/04-identity-propagation.md)).
-- **AI 게이트웨이(1계층)** — 앱과 PAIS 서빙 게이트웨이 사이에 두는 선택 계층. 키와 팀 예산, 레이트리밋, 모델 별칭 라우팅, 캐시를 맡는다. 0계층은 경계(로드밸런서와 WAF), 2계층은 PAIS 내장 게이트웨이([05 5.2절](../docs/05-platform-consumption.md)).
+- **AI 게이트웨이(1계층)** — 앱과 ML API Gateway 사이에 두는 선택 계층. 키와 팀 예산, 레이트리밋, 모델 별칭 라우팅, 캐시를 맡는다. 0계층은 경계(로드밸런서와 WAF), 2계층은 PAIS 내장 ML API Gateway([05 5.2절](../docs/05-platform-consumption.md)).
 - **쇼백(showback)과 차지백(chargeback)** — 팀별 자원과 토큰 사용량을 보여 주는 것(쇼백)과 실제로 비용을 부과하는 것(차지백). 쇼백을 먼저 하고 미터링이 검증된 뒤 차지백으로 간다([05 5.4절](../docs/05-platform-consumption.md)).
 - **멱등 키(Idempotency key)** — 같은 쓰기 요청이 재시도돼도 한 번만 반영되게 하는 요청 식별자. 생성 주체, 저장 위치, 유효 기간을 정해 쓴다([07 7.4절](../docs/07-integration-write-design.md)).
 - **보상(compensation)** — 다단계 쓰기의 일부가 실패했을 때 이미 반영된 단계를 되돌리는 절차. 트랜잭션 경계를 넘는 연동에서 롤백을 대신한다([07 7.4절](../docs/07-integration-write-design.md)).
@@ -119,4 +119,4 @@
 시리즈 형제 가이드는 [시리즈 허브](https://github.com/JaeHoYun/vcf-private-ai)에서 모두 볼 수 있습니다.
 
 ---
-[← 이전: 02 어디에 쓰나](../docs/02-use-cases.md) | [목차](../README.md) | [다음: A2 워크시트 →](A2-worksheets.md)
+[← 이전: 14 운영과 Day-2](../docs/14-operations.md) | [목차](../README.md) | [다음: A2 워크시트 →](A2-worksheets.md)

@@ -15,8 +15,8 @@
 | 순서 | 무엇을 받나 | 어디서 | 앱 팀이 준비할 것 |
 |------|-------------|--------|-------------------|
 | 1 | **프로젝트와 네임스페이스** — VCF Automation의 Project와 그에 대응하는 vSphere 네임스페이스, 쿼터 등급, VPC, 기본 권한 | 플랫폼 팀의 온보딩 템플릿([⑦ 05 5.1.1절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/07-design/docs/05-tenancy-security.md), [① 07 7.3절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/01-infra/docs/07-gpuaas.md)) | 서비스 이름, 위험 등급([02 2.9절](02-use-cases.md)), 사용자 집단, 예상 동시 사용자와 월 요청 수 |
-| 2 | **모델 엔드포인트 접근** — 공유 모델 풀의 completion과 embedding 엔드포인트, 또는 전용 모델의 로컬 배포 | 공유 모델은 provider 인스턴스 관리자가 발급자 인증서와 자격증명을 전달([① 06 6.5절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/01-infra/docs/06-production.md)) | 필요한 모델(생성, 임베딩), 지연 목표, 원격 클라우드 모델 사용 여부(반출 정책 확인) |
-| 3 | **서비스 신원과 토큰** — 앱의 OIDC 클라이언트(Client Credentials) 등록, 사용자 인증용 클라이언트(Authorization Code + PKCE) | 조직 IdP 관리자와 PAIS 인스턴스 관리자([④ 04](04-identity-propagation.md), [③ 05](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/05-auth-and-gateway.md)) | 리다이렉트 URL, 필요한 그룹 클레임. API 토큰은 인스턴스 간 연결과 CLI에만 신청 |
+| 2 | **모델 엔드포인트 접근** — 공유 모델 풀의 completion과 embedding 엔드포인트, 또는 전용 모델의 로컬 배포 | 공유 모델은 provider 인스턴스 관리자가 발급자 인증서와 자격증명을 전달([① 06 6.4.1절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/01-infra/docs/06-production.md)) | 필요한 모델(생성, 임베딩), 지연 목표, 원격 클라우드 모델 사용 여부(반출 정책 확인) |
+| 3 | **서비스 신원과 토큰** — 앱의 OIDC 클라이언트(Client Credentials) 등록, 사용자 인증용 클라이언트(Authorization Code + PKCE) | 조직 IdP 관리자와 PAIS 인스턴스 관리자([04 4.1절](04-identity-propagation.md), [③ 05](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/05-auth-and-gateway.md)) | 리다이렉트 URL, 필요한 그룹 클레임. API 토큰은 인스턴스 간 연결과 CLI에만 신청 |
 | 4 | **지식베이스** — 관리형 지식베이스 생성 권한과 데이터 소스 연결 | PAIS UI 또는 API. 데이터 소스는 소유 부서 승인 뒤 연결(설계 편의 데이터 소스 온보딩) | 데이터 소스 목록, 등급, 소유자 승인서, 조회 전용 여부([02 2.11절](02-use-cases.md)) |
 | 5 | **도구** — 사내 MCP 서버 등록과 도구 승인 | 등록, 승인, 소비의 3계층 직무 분리([⑤ 03 3.4절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/05-security/docs/03-identity-access.md), [09 9.4절](09-mcp-tools.md)) | 도구 목록과 작업 분류표([07 7.2절](07-integration-write-design.md)), 도구 서버의 자격증명 범위 |
 | 6 | **관측 연결** — OpenTelemetry 수집기 주소, Grafana 대시보드, 로그 보존 정책 | 플랫폼 관측 팀([14 14.2절](14-operations.md)) | 요청 ID 규약([04 4.7절](04-identity-propagation.md)), 앱 레벨 지표 |
@@ -32,7 +32,7 @@
 |------|------|----------------|
 | 0계층 경계 | Avi Load Balancer나 기존 API 관리 플랫폼. 조직 SSO, WAF, TLS 종단, 전역 레이트리밋 | 진입 URL과 인증 방식 |
 | 1계층 AI 게이트웨이 | 키와 팀별 토큰 예산과 쿼터, 온프레미스와 클라우드 모델 라우팅과 폴백, 모델 별칭, 시맨틱 캐시, 가드레일 훅, 프롬프트와 응답 로깅, MCP 정책. 있을 수도 없을 수도 있음 | 키 발급처, 모델 별칭 목록, 예산 정책 |
-| 2계층 PAIS 서빙 게이트웨이 | PAIS 자원의 인증과 인가, 복제본 로드밸런싱, 모델명 라우팅, 원격 모델 라우트 | `…/api/v1/compatibility/openai/v1` base URL |
+| 2계층 ML API Gateway(PAIS 내장 서빙 게이트웨이) | PAIS 자원의 인증과 인가, 복제본 로드밸런싱, 모델명 라우팅, 원격 모델 라우트 | `…/api/v1/compatibility/openai/v1` base URL |
 
 앱 팀이 지킬 규칙은 두 가지입니다. **OpenAI 호환 계약만 바라봅니다** — 특정 게이트웨이의 SDK나 확장 헤더에 의존하면 게이트웨이를 바꿀 때 앱이 깨집니다. **모델은 별칭으로 부릅니다** — 앱 설정에 `chat-default`, `embed-default` 같은 별칭을 두고, 별칭이 어느 모델 리비전으로 가는지는 게이트웨이(없으면 앱 설정 한 곳)가 정합니다. 모델 교체가 앱 코드 변경 없이 끝나야 [13 13.7절](13-evaluation-guardrails.md)의 회귀 게이트가 앱 배포와 분리됩니다.
 
