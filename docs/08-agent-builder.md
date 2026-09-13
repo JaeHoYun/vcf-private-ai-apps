@@ -2,7 +2,7 @@
 
 [← 목차로](../README.md)
 
-이 문서는 PAIS 2.1 Agent Builder로 에이전트 하나를 처음부터 구성하는 절차를 다룹니다. 모델 엔드포인트 선택부터 지시문, 지식베이스, 도구, 세션 구성, Playground 테스트, REST API 소비까지 순서대로 따라갑니다. 화면 라벨과 세부 단계는 릴리스에 따라 다를 수 있으므로 공식 문서와 함께 보시기 바랍니다.
+이 문서는 PAIS Agent Builder로 에이전트 하나를 처음부터 구성하는 절차를 다룹니다. 모델 엔드포인트 선택부터 지시문, 지식베이스, 도구, 세션 구성, Playground 테스트, REST API 소비까지 순서대로 따라갑니다. 화면 라벨과 세부 단계는 릴리스에 따라 다를 수 있으므로 공식 문서와 함께 보시기 바랍니다.
 
 > 본 문서의 수치와 동작은 VCF 9.1.1 / PAIF 9.1.1 / PAIS 3.0 기준입니다(작성 2026-06, 9.1.1과 3.0 GA 반영 2026-09). 2.1 환경에서는 "PAIS 3.0부터"로 표기한 대목만 건너뛰면 됩니다. 적용 전 최신 공식 문서로 재확인하시기 바랍니다.
 
@@ -103,7 +103,7 @@ curl 'https://<PAIS FQDN>/api/v1/compatibility/openai/v1/agents/<agent-id>/chat/
 
 이 구분에서 따라 나오는 설계 원칙(사용자 신원은 앱이 입구에서 강제한다, 도구와 지식베이스는 사용자 권한을 넘지 않게 한다, 사용자 집단이 다르면 에이전트와 네임스페이스를 나눈다)과, 신원이 어느 경계에서 끊기고 앱이 무엇으로 대신하는지의 규약(토큰 교환, 서명된 컨텍스트, 지식베이스 권한 일치, 감사 필드)은 설계 편 [04 사용자 신원과 권한 전파](04-identity-propagation.md)가 정본입니다. 구축 단계에서 기억할 것은 두 가지입니다. 관리형 에이전트에 연결하는 도구와 지식베이스는 그 에이전트의 사용자 전원에게 안전해야 하고, PAIS가 사용자 컨텍스트를 도구와 검색까지 전파하는지는 공식 문서로 확인되기 전까지 전파되지 않는다고 가정합니다.
 
-**실구성 사례(공개)** — PAIS 배포에는 Authorization Code + PKCE 흐름을 지원하는 OIDC 공급자가 필요합니다. 따라 할 수 있는 공개 구성 가이드 글이 두 건 있습니다 — 클라이언트 생성(PKCE S256), 리다이렉트 URL, 그룹/오디언스 매퍼 설정과 액세스 토큰 발급 스크립트까지 다룹니다: [Keycloak(VCF Infrastructure Services Appliance 내장) 구성, williamlam.com 2026-08](https://williamlam.com/2026/08/configuring-oidc-with-pkce-in-keycloak-for-vcf-private-ai-services.html), [Authentik 구성, williamlam.com 2025-09](https://williamlam.com/2025/09/ms-a2-vcf-9-0-lab-configuring-authentik-identity-provider-vmware-for-private-ai-services-pais.html).
+PAIS 배포에 필요한 OIDC 공급자(Authorization Code + PKCE 흐름)의 실구성 사례는 [04 4.1절](04-identity-propagation.md)에 있습니다.
 
 접근 통제, 감사, 격리의 구현 상세는 ⑤에 위임합니다.
 

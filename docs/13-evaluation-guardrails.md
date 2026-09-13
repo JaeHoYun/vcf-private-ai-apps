@@ -17,7 +17,7 @@
 - **Playground(대화형 테스트)** — Agent Builder에 내장된 1차 검증 수단입니다. 사람이 직접 대화하며 검색, 도구 호출, 거절 동작을 눈으로 확인하고 지시문을 수정과 보완합니다([08 8.7절](08-agent-builder.md)).
 - **CI/CD 자동 테스트** — 공식 문서가 명시하는 것은 Playground와 구성 코드 보기(View Configuration Code)까지입니다([근거: Create an Agent for a Generative AI Application](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-0/private-ai-foundation-9-x/what-is-private-ai-services/deploy-an-agent-for-a-rag-application.html)). 그 구성 코드를 형상관리에 두고([08 8.8절](08-agent-builder.md)) 파이프라인에서 대표 입력으로 에이전트를 호출해 회귀를 잡는 자동 테스트는 이 가이드가 권하는 실무 패턴입니다.
 
-> **분명히 해 둘 경계** — PAIS 2.1에 이름 붙은 전용 평가(eval) 스코어링 프레임워크가 있다는 공식 근거는 확인되지 않습니다. 따라서 정량 평가 묶음(테스트셋, 채점 기준, 회귀 추적)은 **애플리케이션과 CI 계층에서 직접 설계**해야 합니다. Playground는 탐색적 1차 검증, CI는 반복 검증으로 역할을 나누십시오.
+> **분명히 해 둘 경계** — PAIS에 이름 붙은 전용 평가(eval) 스코어링 프레임워크가 있다는 공식 근거는 확인되지 않습니다. 따라서 정량 평가 묶음(테스트셋, 채점 기준, 회귀 추적)은 **애플리케이션과 CI 계층에서 직접 설계**해야 합니다. Playground는 탐색적 1차 검증, CI는 반복 검증으로 역할을 나누십시오.
 
 ## 13.3 무엇을 측정하나
 
@@ -49,7 +49,7 @@
 - **리소스 가드레일** — 격리된 vSphere Namespace의 CPU, 메모리, GPU 쿼터. 한 워크로드가 자원을 독식하지 못하게 막는 운영 통제입니다.
 - **거버넌스 포지셔닝** — 에이전트 루프와 도구 사용에 대한 상위 플랫폼 차원의 거버넌스 방향.
 
-> **분명히 해 둘 경계** — 콘텐츠 모더레이션과 프롬프트 인젝션 방어 같은 **PAIS 내장 콘텐츠 가드레일** 기능은 공식 근거가 확인되지 않습니다. 따라서 출력 안전, 입력 검증, 민감정보 차단 같은 가드레일은 **애플리케이션 계층에서 설계**해야 합니다 — 입력과 출력 필터, 도구 권한 최소화, 승인 통제([09](09-mcp-tools.md)), 지시문의 거절 규칙을 조합하십시오. 어떤 가드를 어디에 두고 무엇으로 만드는지의 선택과 배치는 [12 12.3절](12-service-security.md)이, 플랫폼 정책과 통제 상세는 [⑤ 앱 계층 가드레일](https://github.com/JaeHoYun/vcf-private-ai/blob/main/05-security/docs/06-app-guardrails.md)이 다룹니다.
+> **분명히 해 둘 경계** — 콘텐츠 모더레이션과 프롬프트 인젝션 방어 같은 **PAIS 내장 콘텐츠 가드레일**은 없으며, 그 경계 선언과 어떤 가드를 어디에 두고 무엇으로 만드는지의 선택과 배치는 [12 12.3절](12-service-security.md)이 정본입니다. 이 절은 그 한계를 **평가 관점**에서 다룹니다 — 입력과 출력 필터, 도구 권한 최소화, 승인 통제([09](09-mcp-tools.md)), 지시문의 거절 규칙이 골든셋과 회귀로 실제 동작하는지를 확인하는 것이 이 절의 몫입니다. 플랫폼 정책과 통제 상세는 [⑤ 앱 계층 가드레일](https://github.com/JaeHoYun/vcf-private-ai/blob/main/05-security/docs/06-app-guardrails.md)이 다룹니다.
 
 **원격 클라우드 모델을 쓰는 에이전트의 추가 가드레일(PAIS 3.0부터)** — 에이전트의 completion 엔드포인트가 원격 클라우드 모델이면([10 10.1절](10-models-serving.md)), 위에서 앱 계층이 맡는 입출력 필터에 한 층이 더 필요합니다. 프롬프트에 실리는 검색 청크와 도구 결과가 사외로 나가기 때문입니다. 그래서 원격 모델 에이전트에는 연결할 수 있는 지식베이스와 도구를 반출 정책이 허용한 것으로 제한하고, 도구 결과가 프롬프트에 들어가기 전에 PII 마스킹을 거치게 하며, 평가 골든셋에 "기밀 등급 문서를 근거로 답해야 하는 질문"을 넣어 그런 질문이 원격 모델 에이전트로 흘러가지 않는지를 회귀로 확인합니다. 어떤 데이터가 나가도 되는지의 기준은 [⑤ 데이터 거버넌스 5.6절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/05-security/docs/05-data-governance.md)이 정합니다.
 
