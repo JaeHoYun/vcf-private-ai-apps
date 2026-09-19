@@ -174,7 +174,7 @@ PAIS는 2.1부터 추론, GPU, 에이전트를 아우르는 관측을 VCF Operat
 7. **기록 보존** — 감사 로그, 게이트 기록, 릴리스 매니페스트, 출시 심사 패키지는 보존 기간 동안 남깁니다([⑤ 07 7.1.3절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/05-security/docs/07-audit-compliance.md)). 레지스트리의 상태를 퇴역으로 바꾸고 소유자와 퇴역일을 적습니다.
 8. **쿼터와 비용 반납** — 네임스페이스 쿼터를 줄이거나 반납하고 쇼백 집계에서 서비스를 종료 처리합니다.
 
-퇴역 절차를 미리 정해 두면 파일럿을 끝내는 것도 쉬워집니다. 파일럿의 종료가 곧 이 절차의 축소판이며, 종료하지 못한 파일럿이 쌓이는 것이 섀도 AI(조직이 존재를 모르는 채 쓰이는 AI)의 흔한 출처입니다. 이미 쌓인 섀도 AI를 찾는 신호는 [⑤ 07 7.2.3절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/05-security/docs/07-audit-compliance.md)에, 찾은 뒤 등록하고 등급을 판정해 처분하는 순서는 [AX 방법론 10 10.4절](https://github.com/JaeHoYun/enterprise-ax-methodology/blob/main/docs/10-governance.md)에 있습니다.
+퇴역 절차를 미리 정해 두면 파일럿을 끝내는 것도 쉬워집니다. 파일럿의 종료가 곧 이 절차의 축소판이며, 종료하지 못한 파일럿이 쌓이는 것이 섀도 AI(조직이 존재를 모르는 채 쓰이는 AI)의 흔한 출처입니다. 이미 쌓인 섀도 AI를 찾는 신호는 [⑤ 07 7.2.3절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/05-security/docs/07-audit-compliance.md)에, 찾은 뒤 등록하고 등급을 판정해 처분하는 순서는 [AX 방법론 07 7.6절](https://github.com/JaeHoYun/enterprise-ax-methodology/blob/main/docs/07-organization-and-control.md)에 있습니다.
 
 서비스 수명주기의 기술 설명은 여기까지입니다. 이 역량을 어디에 써야 성과가 나는지의 유스케이스 선별과 위험 등급 판정은 기획 편 [02 어디에 쓰나](02-use-cases.md)에 있고, 용어와 참조 링크는 [A1 부록](../appendix/A1-reference.md)에, 결정을 적어 두는 워크시트는 [A2 워크시트](../appendix/A2-worksheets.md)에 정리했습니다.
 

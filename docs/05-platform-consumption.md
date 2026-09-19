@@ -56,7 +56,7 @@
 
 **예산과 한도** — 팀마다 월 토큰 상한과 소프트 한도(예: 80%에서 알림)를 정하고, 초과 시의 동작(알림만, 저비용 모델로 강등, 스로틀)을 서비스의 위험 등급에 맞춰 정합니다. 1계층이 없으면 앱이 자체 집계로 같은 규칙을 흉내 냅니다. 배치 파이프라인은 온라인 서비스와 예산을 나눕니다([03 3.7절](03-design-patterns.md)).
 
-**쇼백에서 차지백으로** — 첫 단계는 쇼백(팀별 사용량을 보여 주기)이고, GPU 단위 미터링이 검증된 뒤에 차지백(실제 정산)으로 갑니다. 플랫폼이 GPU 지표를 네임스페이스 단위로 집계하고 앱이 토큰 지표를 서비스 단위로 남기면 둘을 합쳐 대시보드가 됩니다([① 07 7.6절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/01-infra/docs/07-gpuaas.md), [⑦ 05 5.1.1절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/07-design/docs/05-tenancy-security.md)). 단위 경제(요청당, 유스케이스당 월 비용)의 점검 항목은 [AX FinOps 스코어카드](https://github.com/JaeHoYun/enterprise-ax-methodology/blob/main/worksheet/ai-finops-scorecard.md)에 있습니다.
+**쇼백에서 차지백으로** — 첫 단계는 쇼백(팀별 사용량을 보여 주기)이고, GPU 단위 미터링이 검증된 뒤에 차지백(실제 정산)으로 갑니다. 플랫폼이 GPU 지표를 네임스페이스 단위로 집계하고 앱이 토큰 지표를 서비스 단위로 남기면 둘을 합쳐 대시보드가 됩니다([① 07 7.6절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/01-infra/docs/07-gpuaas.md), [⑦ 05 5.1.1절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/07-design/docs/05-tenancy-security.md)). 단위 경제(요청당, 유스케이스당 월 비용)를 가치에 견주어 보는 관점은 [AX 08 8.4절](https://github.com/JaeHoYun/enterprise-ax-methodology/blob/main/docs/08-scale-and-next.md)에 있습니다.
 
 ## 5.5 앱 수준 토큰 절감
 
@@ -80,7 +80,7 @@
 | 도구 | MCP 서버 정의, 도구 스키마 버전, 작업 분류표, 승인 이력 | 승인된 네임스페이스, 도구 설명 해시 |
 | 평가셋 | 골든셋과 채점 기준, 실패 사례 | 마지막 회귀 실행 결과 |
 
-플랫폼 팀이 Tool Gallery로 도구를 중앙 관리하듯([09 9.2절](09-mcp-tools.md)), 프롬프트와 평가셋도 소유자와 버전이 있는 자산으로 다룹니다. 전사 방법론의 "학습 자산화"(중단되거나 기준에 못 미친 파일럿에서 배운 것을 기록해 다음 시도에 재사용하는 일)가 이 자리입니다([AX 05 5.6절](https://github.com/JaeHoYun/enterprise-ax-methodology/blob/main/docs/05-operating-model.md)).
+플랫폼 팀이 Tool Gallery로 도구를 중앙 관리하듯([09 9.2절](09-mcp-tools.md)), 프롬프트와 평가셋도 소유자와 버전이 있는 자산으로 다룹니다. 전사 방법론의 "학습 자산화"(중단되거나 기준에 못 미친 파일럿에서 배운 것을 기록해 다음 시도에 재사용하는 일)가 이 자리입니다([AX 07 7.3절](https://github.com/JaeHoYun/enterprise-ax-methodology/blob/main/docs/07-organization-and-control.md)).
 
 ## 5.7 로드맵 대응 — AI Gateway가 나오면 무엇이 바뀌나
 

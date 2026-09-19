@@ -18,7 +18,7 @@
 | **MCP 도구** | 사내 시스템을 MCP 서버로 감싸 에이전트가 판단해 호출([09](09-mcp-tools.md)) | 입력마다 어느 시스템을 조회할지 달라지는 읽기. 공식이나 커뮤니티 MCP 서버가 있는 시스템 | 관리형 경로에서는 정적 토큰 하나로 호출되므로 서비스 범위 도구만([04 4.4절](04-identity-propagation.md)). 쓰기 도구는 승인 게이트 뒤에 |
 | **RPA와 화면 자동화** | API가 없는 레거시를 화면 조작으로 다룸 | API를 만들 수 없는 시스템의 마지막 수단 | 화면이 바뀌면 깨지고 감사 근거가 약함. 에이전트에 RPA를 붙여 "에이전트"라 부르는 것은 [02 2.2절](02-use-cases.md)의 에이전트 워싱 |
 
-레거시에 API가 없고 담당자가 없는 상태는 그 자체가 연동 준비도 부채입니다([AX 04 4.4절](https://github.com/JaeHoYun/enterprise-ax-methodology/blob/main/docs/04-portfolio.md)). 이런 시스템은 첫 서비스의 연동 대상에서 빼고, 읽기 전용 API를 먼저 만드는 것을 별도 과제로 둡니다.
+레거시에 API가 없고 담당자가 없는 상태는 그 자체가 연동 준비도 부채입니다([AX 03 3.6절](https://github.com/JaeHoYun/enterprise-ax-methodology/blob/main/docs/03-problem-definition.md)). 이런 시스템은 첫 서비스의 연동 대상에서 빼고, 읽기 전용 API를 먼저 만드는 것을 별도 과제로 둡니다.
 
 ## 7.2 작업 분류표 — 되돌리기 어려움과 영향 범위
 
