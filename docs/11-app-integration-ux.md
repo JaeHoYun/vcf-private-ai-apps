@@ -78,7 +78,7 @@
 
 ## 11.6 AI 생성 고지와 표시 — 화면에 어떻게 적용하나
 
-AI 기본법은 고영향 또는 생성형 AI 제품과 서비스에 AI 이용 사실의 사전 고지와 생성물 표시를 요구합니다. 하위 법령이 2026-07-21 시행되면서 표시 방식이 구체화됐고, 계도기간 동안에도 의무 자체는 발효 상태입니다[^ai-act]. 전사 방법론은 이 의무를 점검표로 두었지만([AX 워크시트 B-0](https://github.com/JaeHoYun/enterprise-ax-methodology/blob/main/worksheet/governance-sovereignty-gap.md)), 화면에 무엇을 어떻게 넣을지는 앱 팀의 몫입니다.
+AI 기본법은 고영향 또는 생성형 AI 제품과 서비스에 AI 이용 사실의 사전 고지와 생성물 표시를 요구합니다. 하위 법령이 2026-07-21 시행되면서 표시 방식이 구체화됐고, 계도기간 동안에도 의무 자체는 발효 상태입니다[^ai-act]. 전사 방법론은 이 의무를 기존 통제에 연계하는 원칙까지만 다루고([AX 07 7.8절](https://github.com/JaeHoYun/enterprise-ax-methodology/blob/main/docs/07-organization-and-control.md)), 화면에 무엇을 어떻게 넣을지는 앱 팀의 몫입니다.
 
 | 요구 | 화면과 산출물에서 | 결정할 것 |
 |------|-------------------|-----------|
