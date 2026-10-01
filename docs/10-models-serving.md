@@ -134,7 +134,7 @@ CLI의 형태에 대해 한 가지 정리해 둡니다. 단독 실행 파일 형
 
 **보존과 감시** — 심사 결과, 라이선스 원문 사본, 모델 카드와 데이터셋 카드를 거버넌스 기록으로 보존하고 릴리스 매니페스트([13 13.9절](13-evaluation-guardrails.md))에서 참조합니다. 제공자가 라이선스를 바꾸거나 모델 카드를 갱신하면 재심사 대상이므로, 반입 시점의 사본을 남기고 갱신을 주기적으로 확인합니다. 공유 모델은 provider가 심사하고 consumer는 결과를 참조하되, 자기 유스케이스가 사용 제한(6번)에 해당하는지는 consumer가 확인합니다.
 
-다음 문서에서는 만든 에이전트를 운영에 투입하기 전 **평가하고 가드레일을 설계**하는 방법을 다룹니다.
+다음 문서에서는 이렇게 서빙한 모델과 만든 에이전트를 **사내 앱에 통합**하는 방법을 다룹니다. 4-Tier 골격과 BFF, 세션과 멀티턴, 출처와 신뢰도를 보여 주는 신뢰 UX, AI 생성 고지와 표시, 대화 데이터 거버넌스가 주요 내용입니다.
 
 [^kmmlu]: Son 외, [KMMLU: Measuring Massive Multitask Language Understanding in Korean](https://arxiv.org/abs/2402.11548) (2024). 한국어 지식 평가 벤치마크.
 [^kobest]: Kim 외, [KoBEST: Korean Balanced Evaluation of Significant Tasks](https://arxiv.org/abs/2204.04541) (2022). 한국어 이해 과제 묶음. HAE-RAE Bench는 Son 외, [arXiv 2309.02706](https://arxiv.org/abs/2309.02706) (2023).
