@@ -36,18 +36,19 @@
 
 > 번호는 서비스 수명주기 순서를 따르므로, 사이에 문서가 추가되어도 기존 번호는 바뀌지 않습니다.
 
-## 기반 버전 (Source of Truth)
-
-> 본 가이드는 PAIS 3.0 기반의 서비스 구현에 집중합니다. 광범위한 인프라 버전(vSphere, NSX, vSAN 등)은 단정하지 않고 형제 가이드의 버전 단일 기준 문서를 기준선으로 삼습니다 → [① README 버전표](https://github.com/JaeHoYun/vcf-private-ai/tree/main/01-infra#기반-버전-source-of-truth). 모든 수치는 작성 시점(2026-06) 기준이고 2026-09에 VCF 9.1.1 / PAIS 3.0 GA(2026-09-03) 내용을 반영했으며, 엔진, CLI, 기능 동작은 릴리스마다 바뀌므로 적용 전 공식 문서로 재확인하시기 바랍니다.
+## 기반 버전
 
 | 구분 | 버전 | 비고 |
 |------|------|------|
-| VMware Cloud Foundation / PAIF | 9.1.1 | 9.1 GA 2026-05, 9.1.1 GA 2026-09. PAIS 3.0은 VCF 9.1.x 호환 |
-| Private AI Services (PAIS) | 3.0 | 6개 모듈 — Model Gallery, Model Runtime, Data Indexing and Retrieval, MCP Servers and Tool Gallery, Agent Builder, Observability. 3.0에서 공유 모델 호스팅, 원격 클라우드 모델, API 토큰, 지식베이스 복제 추가 |
+| VMware Cloud Foundation (VCF) | 9.1.1 | 9.1 GA 2026-05, 9.1.1 GA 2026-09 |
+| Private AI Foundation with NVIDIA (PAIF) | 9.1.1 | VCF 코어 구독 포함(NVAIE만 별도) |
+| Private AI Services (PAIS) | 3.0 | VCF 9.1.x 호환. 6개 모듈(Model Gallery, Model Runtime, Data Indexing and Retrieval, MCP Servers and Tool Gallery, Agent Builder, Observability). 3.0에서 공유 모델 호스팅, 원격 클라우드 모델, API 토큰, 지식베이스 복제 추가 |
 | 서빙 엔진 (Model Runtime) | vLLM 0.20.0, llama.cpp b9309, Infinity 0.0.76 | vLLM 0.20.0은 CUDA 13.0 기본(드라이버 580 이상). 2.1은 vLLM 0.11.2, llama.cpp b7739 |
 | 실행 기반 (VKS) | VKr 1.34, ClusterClass builtin-generic-v3.5.0, NVIDIA GPU Operator 25.10.1(기본) 또는 26.3.1 | 모델 엔드포인트와 에이전트 실행. 2.1은 VKr 1.33, v3.2.0 |
 
-> **2.1 환경을 운영 중이라면** — 본문에서 "PAIS 3.0부터"로 표기한 대목만 생략하면 됩니다. 기능별 도입 버전은 [① 00 What's New의 버전별 기능 이력](https://github.com/JaeHoYun/vcf-private-ai/blob/main/01-infra/docs/00-whats-new.md#08-버전별-기능-이력-pais-2089--21--30)에, 2.1 기준으로 작성된 2026-06 시점 문서 전체는 태그 [`baseline-pais-2.1`](https://github.com/JaeHoYun/vcf-private-ai-apps/tree/baseline-pais-2.1)에 있습니다.
+> 본 가이드는 PAIS 3.0 기반의 서비스 구현에 집중합니다. 광범위한 인프라 버전(vSphere, NSX, vSAN 등)은 단정하지 않고 형제 가이드의 버전 단일 기준 문서를 기준선으로 삼습니다 → [① README 버전표](https://github.com/JaeHoYun/vcf-private-ai/tree/main/01-infra#기반-버전). 모든 수치는 작성 시점(2026-06) 기준이고 2026-09에 VCF 9.1.1 / PAIS 3.0 GA(2026-09-03) 내용을 반영했으며, 엔진, CLI, 기능 동작은 릴리스마다 바뀌므로 적용 전 공식 문서로 재확인하시기 바랍니다.
+>
+> **2.1 환경을 운영 중이라면.** 본문에서 "PAIS 3.0부터"로 표기한 대목만 생략하면 됩니다. 기능별 도입 버전은 [① 00 What's New의 버전별 기능 이력](https://github.com/JaeHoYun/vcf-private-ai/blob/main/01-infra/docs/00-whats-new.md#08-버전별-기능-이력-pais-2089--21--30)에, 2.1 기준으로 작성된 2026-06 시점 문서 전체는 태그 [`baseline-pais-2.1`](https://github.com/JaeHoYun/vcf-private-ai-apps/tree/baseline-pais-2.1)에 있습니다.
 
 ## 이 가이드의 관점 — 서비스 수명주기
 

@@ -30,7 +30,7 @@
 - **Model Runtime** — completion, embedding 모델을 추론 엔진으로 실행해 OpenAI 호환 엔드포인트로 노출하는 PAIS 모듈.
 - **Model Gallery** — 모델 아티팩트의 중앙 저장소. Harbor(OCI 레지스트리) 기반.
 - **Harbor** — OCI 호환 컨테이너 레지스트리. Model Gallery의 저장소 구현.
-- **vLLM, llama.cpp, Infinity** — Model Runtime의 추론 엔진. PAIS 3.0 기준 vLLM 0.20.0(생성과 임베딩, CUDA 13.0 기본), llama.cpp b9309(CPU 추론), Infinity 0.0.76(임베딩 전용). 2.1은 vLLM 0.11.2, llama.cpp b7739. 버전 정본은 [README 기반 버전표](../README.md#기반-버전-source-of-truth).
+- **vLLM, llama.cpp, Infinity** — Model Runtime의 추론 엔진. PAIS 3.0 기준 vLLM 0.20.0(생성과 임베딩, CUDA 13.0 기본), llama.cpp b9309(CPU 추론), Infinity 0.0.76(임베딩 전용). 2.1은 vLLM 0.11.2, llama.cpp b7739. 버전 정본은 [README 기반 버전표](../README.md#기반-버전).
 - **chat completion / OpenAI 호환 API** — `/chat/completions`, `/completions`, `/embeddings` 등 OpenAI 규약을 따르는 추론 API. 에이전트는 챗 컴플리션 엔드포인트로 노출된다.
 - **Artifact Mirroring Tool** — 에어갭 환경에 모델과 아티팩트를 미러링해 반입하는 PAIS 도구(PAIS 2.1에서 도입). pais CLI 플러그인의 `vcf pais amt pull/push` 명령으로 수행한다(VCF CLI 명령 레퍼런스에는 누락, Disconnected Environment 배포 문서에 명시).
 - **NIM(NVIDIA Inference Microservices)** — NVIDIA가 제공하는 컨테이너형 추론 모델. Model Gallery로 반입해 관리할 수 있다.
