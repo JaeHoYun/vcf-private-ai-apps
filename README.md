@@ -61,21 +61,6 @@
 
 각 부의 문서는 플랫폼 편(①–⑦)의 해당 절로 딥링크합니다. 플랫폼이 제공하는 통제와 사실 관계는 그쪽이 정본이고, 이 가이드는 그것을 서비스 하나에 적용하는 순서와 판단을 다룹니다.
 
-## 빠른 시작
-
-- **"처음 본다"** → [00 개관](docs/00-orientation.md) → [01 서비스 유형과 PAIS 3.0 구성](docs/01-foundations.md)
-- **"이걸로 무슨 가치를 만드나, 어디서 실패하나"** → [02 어디에 적용하나](docs/02-use-cases.md)
-- **"사용자 권한이 도구와 검색까지 전달되게 하려면"** → [04 사용자 신원과 권한 전파](docs/04-identity-propagation.md)
-- **"새 팀이 플랫폼에서 무엇을 받고 어떻게 정산되나"** → [05 플랫폼 소비](docs/05-platform-consumption.md)
-- **"문서보안이 적용된 문서를 검색 소스로 사용하려면"** → [06 데이터 소스 온보딩과 보호 문서](docs/06-data-onboarding.md)
-- **"사내 시스템에 쓰기까지 시키려면"** → [07 사내 시스템 연동과 쓰기 설계](docs/07-integration-write-design.md)
-- **"바로 하나 만들어 본다"** → [08 Agent Builder로 구축](docs/08-agent-builder.md)
-- **"사내 시스템을 도구로 연결한다"** → [09 MCP 도구 통합](docs/09-mcp-tools.md)
-- **"어떤 모델을 어떻게 서빙하나"** → [10 모델과 서빙](docs/10-models-serving.md)
-- **"화면에서 사용자가 답을 믿게 하려면, 고지는 어떻게"** → [11 앱 통합과 신뢰 UX](docs/11-app-integration-ux.md)
-- **"이 서비스를 출시하려면 보안에서 무엇을 준비하나"** → [12 서비스 보안 준비와 가드레일](docs/12-service-security.md)
-- **"운영에 투입하기 전 점검한다"** → [13 평가와 출시 게이트](docs/13-evaluation-guardrails.md) | [14 운영과 Day-2](docs/14-operations.md)
-
 ## 라이선스
 
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). 자유롭게 활용하시되 출처를 표기해 주세요. `출처: https://github.com/JaeHoYun/vcf-private-ai-apps`
