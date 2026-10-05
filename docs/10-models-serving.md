@@ -30,7 +30,7 @@ PAIS 3.0 Model Runtime이 지원하는 추론 엔진과 버전입니다([근거:
 - **llama.cpp = 2.1 신규** — GPU 없이 CPU에서 추론하는 경로가 2.1에서 추가됐습니다. 작은 모델, 저부하 보조 작업이나 GPU가 부족한 환경에서 선택지로 활용할 수 있습니다(성능과 비용 트레이드오프는 [14](14-operations.md), [⑥ TCO와 비용 모델](https://github.com/JaeHoYun/vcf-private-ai/blob/main/06-sizing-cost/docs/07-tco-cost-model.md)). CPU 추론에서 MCP 도구를 함께 사용할 때 reasoning 모델이 타임아웃되던 문제는 2.1.2에서 수정됐습니다.
 - **버전 주의** — 3.0으로 업그레이드할 때 vLLM 버전이 0.11.2에서 0.20.0으로 크게 바뀌므로, 모델 엔드포인트의 VRAM 요구량과 양자화 포맷 지원을 다시 확인하십시오.
 - **엔진 버전 오버라이드** — 모델 엔드포인트 정의(YAML)의 `engineImage`로 엔진 이미지를 지정할 수 있습니다.
-- **버전 정본** — 엔진 버전의 단일 기준은 [README 기반 버전표](../README.md#기반-버전-source-of-truth)입니다. 본문과 용어집의 버전 표기는 그 요약이며, 갱신은 README 표를 기준으로 맞춥니다.
+- **버전 정본** — 엔진 버전의 단일 기준은 [README 기반 버전표](../README.md#기반-버전)입니다. 본문과 용어집의 버전 표기는 그 요약이며, 갱신은 README 표를 기준으로 맞춥니다.
 
 ## 10.3 Model Gallery — 모델 저장소
 
