@@ -60,9 +60,11 @@
 | 3 복호화 전처리 | 서비스 신원으로 문서 단위 권한을 확인하며 복호화하고, 정규화와 형식 변환과 OCR과 마스킹과 청킹을 거쳐 접근 주체를 평탄화한 뒤 S3 호환 스테이징에 저장함 | 별도 VKS 클러스터나 네임스페이스. NSX 분산 방화벽으로 문서보안 서버, 키 서버, 스테이징, 존 4 외의 통신 차단. 평문은 이 존을 나가지 않음 | [④ 02 2.1.2절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/04-rag/docs/02-ingestion-indexing.md), [⑦ 05 5.4절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/07-design/docs/05-tenancy-security.md) |
 | 4 인덱스 저장 | 관리형 지식베이스(S3 호환 커넥터로 스테이징을 읽음) 또는 커스텀 pgvector. 등급별로 지식베이스와 인스턴스와 DB를 분리 | vSAN 암호화 스토리지를 사용하는 DSM PostgreSQL. 등급별 인스턴스 | [② 05 5.3절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/02-vectordb/docs/05-usage-rag.md), [⑤ 05 5.2절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/05-security/docs/05-data-governance.md) |
 | 5 쿼리와 출력 | 사용자 토큰의 그룹 클레임으로 사전 필터, 필요 시 문서보안 서버에 실시간 재검증. 출력에 등급 표시, 복사와 공유 차단, 개인정보 마스킹 | 앱과 BFF | [04 4.5절](04-identity-propagation.md), 구축 편의 앱 통합과 신뢰 UX |
-| 6 감사와 수명주기 | 복호화 로그(서비스 계정, 문서, 승인 근거, 건수), 검색 로그, LLM 추적을 문서 ID로 연결해 중앙 수집. 회수와 재분류 이벤트로 청크 즉시 비활성화 | 중앙 로그 수집, 로그 저장소는 원문 등급 자산 | [⑤ 07 7.1.2절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/05-security/docs/07-audit-compliance.md), [⑤ 05 5.9절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/05-security/docs/05-data-governance.md) |
+| 6 감사와 수명주기 | 존 3의 복호화 로그(서비스 계정, 문서, 승인 근거, 건수), 존 4의 검색 로그(누가, 어떤 필터로, 무엇을 받았는지), 존 5의 LLM 추적(앱 이벤트와 PAIS 서빙의 OTel 추적)을 문서 ID로 연결해 중앙 수집. 회수와 재분류 이벤트로 청크 즉시 비활성화 | 중앙 로그 수집, 로그 저장소는 원문 등급 자산 | [⑤ 07 7.1.2절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/05-security/docs/07-audit-compliance.md), [⑤ 05 5.9절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/05-security/docs/05-data-governance.md) |
 
 존 6의 로그 저장소는 곧 "복호화된 발췌본의 저장소"입니다. 프롬프트와 완성문을 그대로 남기는 추적은 원문 등급 자산으로 등록하고 보존과 접근권한을 정합니다.
+
+검색 로그의 기록 항목은 [⑤ 05 5.3절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/05-security/docs/05-data-governance.md)을 따릅니다. 커스텀 pgvector 경로는 검색 계층이 앱에서 전달받은 사용자 신원으로 이 항목을 기록합니다. 관리형 지식베이스(PAIS Data Indexing and Retrieval)가 사용자별 검색 로그를 남기는지는 확인 필요입니다. 확인 전에는 존 5의 앱과 BFF가 검색 요청 시점에 같은 항목을 기록합니다.
 
 ## 6.5 인입 패턴 다섯 가지와 권장 조합
 
