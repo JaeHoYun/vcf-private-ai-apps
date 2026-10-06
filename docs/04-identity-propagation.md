@@ -19,7 +19,7 @@ PAIS의 접근 통제는 인스턴스 단위입니다. 인스턴스에 접근할
 
 **실구성 사례(공개)** — PAIS 배포에는 Authorization Code + PKCE 흐름을 지원하는 OIDC 공급자가 필요합니다. 클라이언트 생성(PKCE S256), 리다이렉트 URL, 그룹과 오디언스 매퍼 설정과 액세스 토큰 발급 스크립트까지 다루는 공개 구성 글이 두 건 있습니다: [Keycloak(VCF Infrastructure Services Appliance 내장) 구성, williamlam.com 2026-08](https://williamlam.com/2026/08/configuring-oidc-with-pkce-in-keycloak-for-vcf-private-ai-services.html), [Authentik 구성, williamlam.com 2025-09](https://williamlam.com/2025/09/ms-a2-vcf-9-0-lab-configuring-authentik-identity-provider-vmware-for-private-ai-services-pais.html).
 
-## 4.2 전파 경로 — 어디서 무엇이 유실되나
+## 4.2 전파 경로. 어디서 무엇이 유실되나
 
 사용자 요청은 네 경계를 거칩니다. 경계마다 신원이 무엇으로 표현되는지가 다르고, 두 번째 경계에서 사용자 신원은 기본적으로 유실됩니다.
 

@@ -41,24 +41,24 @@
 
 PAIS 3.0은 여섯 모듈로 이뤄지며, 에이전트는 이 모듈들을 함께 사용합니다. 모듈 구성은 2.1과 같고, 3.0은 Model Runtime이 모델을 가져오는 방식(공유 모델, 원격 클라우드 모델)과 인증 수단(API 토큰)을 넓혔습니다.
 
-### 1.2.1 모델 계층 — Model Gallery, Model Runtime
+### 1.2.1 모델 계층. Model Gallery, Model Runtime
 
 - **Model Gallery** — 모델 아티팩트를 담는 저장소로, Harbor(OCI 호환 컨테이너 레지스트리)를 기반으로 합니다. NVIDIA NIM, 자체 모델 등을 프로젝트 단위로 관리합니다. ([10](10-models-serving.md))
 - **Model Runtime** — Gallery의 모델을 추론 엔진으로 실행해 **OpenAI 호환 엔드포인트**로 노출합니다. completion(생성)과 embedding(임베딩) 모델을 서빙합니다. 에이전트는 여기서 노출된 completion 엔드포인트를 가져다 사용합니다. 3.0부터는 이 네임스페이스의 GPU에서 실행되는 로컬 모델 외에, 다른 PAIS 인스턴스가 서빙하는 공유 모델과 Google Gemini 같은 원격 클라우드 모델도 같은 엔드포인트 형태로 연결됩니다. 에이전트 쪽에서는 셋 다 드롭다운의 completion 엔드포인트 하나로 보입니다([10 10.1절](10-models-serving.md)).
 
-### 1.2.2 지식 계층 — Data Indexing and Retrieval
+### 1.2.2 지식 계층. Data Indexing and Retrieval
 
 데이터소스를 인덱싱해 **지식베이스**로 구성하고, 검색을 제공합니다. 벡터 임베딩은 pgvector 확장을 갖춘 외부 PostgreSQL에 저장됩니다. 에이전트는 지식베이스를 연결해 검색을 수행하며, 검색 자체가 MCP 도구로 노출됩니다(아래 1.2.3). 지식베이스 구성, 청크, 임베딩의 상세는 ④에 위임합니다.
 
-### 1.2.3 도구 계층 — MCP Servers and Tool Gallery (2.1 신규)
+### 1.2.3 도구 계층. MCP Servers and Tool Gallery (2.1 신규)
 
 Model Context Protocol(MCP)로 외부 시스템을 도구로 연결합니다. PAIS는 MCP를 세 방향으로 다룹니다 — 에이전트가 외부 MCP 도구를 **호출**하고, 지식베이스 검색을 MCP 도구로 **호스팅**하며, 원격 MCP 서버를 도구로 **등록하고 승인**합니다. **Tool Gallery**는 이 MCP 서버들을 중앙에서 관리하는 2.1 신규 기능입니다. ([09](09-mcp-tools.md))
 
-### 1.2.4 조립 계층 — Agent Builder
+### 1.2.4 조립 계층. Agent Builder
 
 모델 엔드포인트, 지시문, 지식베이스, 도구, 세션 정책을 조합해 에이전트를 구성하고, **챗 컴플리션 엔드포인트**로 노출합니다. 모델과 지식과 도구 사이의 상호작용을 오케스트레이션하는 것이 Agent Builder의 역할입니다. ([08](08-agent-builder.md))
 
-### 1.2.5 관측 계층 — Observability (2.1 확장)
+### 1.2.5 관측 계층. Observability (2.1 확장)
 
 추론 엔진과 GPU 사용률부터 지식베이스 인덱싱과 에이전트 동작까지 추적합니다. OpenTelemetry 기반 LLM 추적(trace)으로 "사용자 ↔ 모델 ↔ 에이전트 ↔ 지식베이스" 상호작용을 단계별로 확인할 수 있습니다. ([14](14-operations.md))
 

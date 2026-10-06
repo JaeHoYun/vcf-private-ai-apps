@@ -39,7 +39,7 @@ PAIS는 2.1부터 추론, GPU, 에이전트를 아우르는 관측을 VCF Operat
 
 **PAIS 3.0에서 더해진 것** — 모델과 에이전트 메트릭을 PAIS UI에서 실시간 대시보드로 볼 수 있고, 조직이 배포한 Grafana에 적용할 예시 구성이 제공되며, 추론 백엔드 헬스가 실시간으로 노출되고, 트레이싱은 LLM 상호작용 전체로 넓어졌습니다. 에이전트 운영에 직결되는 변화는 두 가지입니다. 첫째, 원격 클라우드 모델을 사용하는 에이전트는 그 토큰 사용량이 별도로 추적되므로 실비와 반출 증빙으로 함께 남깁니다. 둘째, Prometheus 수집이 PAIS 관리 VKS 클러스터가 가용해진 뒤에 시작되도록 바뀌어 업그레이드 직후 기준선 지표가 비는 구간이 생기니, 그 구간의 알람은 유예합니다(14.3절). ([근거: PAIS 3.0 릴리스 노트](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-1/private-ai-release-notes/vmware-private-ai-services-release-notes.html))
 
-## 14.3 업그레이드 — 다운타임 주의
+## 14.3 업그레이드. 다운타임 주의
 
 > **반드시 알아둘 운영 리스크** — PAIS 2.0.x → 2.1 업그레이드는 **모델 엔드포인트를 호스팅하는 VKS 클러스터를 삭제하고 재생성**합니다. 그 과정에서 노드가 재생성되고 모델을 다시 내려받는 동안 **다운타임**이 발생합니다. ([근거: PAIS 릴리스 노트](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-0/private-ai-release-notes/vmware-private-ai-services-release-notes.html))
 

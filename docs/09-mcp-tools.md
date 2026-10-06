@@ -38,7 +38,7 @@ PAIS에서 지식베이스 검색은 별도 연결 작업 없이 MCP 도구로 �
 
 승인 워크플로우는 **관리자가 도구 등록을 통제**하는 것이며, 런타임 응답에 사람이 개입하는 휴먼인더루프와는 다릅니다(후자는 PAIS 내장 기능으로 확인되지 않으며 애플리케이션 계층 설계입니다 — [13](13-evaluation-guardrails.md)).
 
-## 9.5 연결 요건 — 전송과 인증
+## 9.5 연결 요건. 전송과 인증
 
 원격 MCP 서버를 연결하려면 다음을 충족해야 합니다([근거: Connect an MCP Server to Private AI Services](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-0/private-ai-foundation-9-x/what-is-private-ai-services/adding-mcp-servers-for-real-time-data-access-and-specialized-ai-capabilities/connect-to-an-mcp-server.html)).
 

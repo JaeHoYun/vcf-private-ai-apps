@@ -8,7 +8,7 @@
 
 ---
 
-## 10.1 Model Runtime — 서빙 계층
+## 10.1 Model Runtime. 서빙 계층
 
 Model Runtime은 completion(생성)과 embedding(임베딩) 모델을 추론 엔진으로 실행해 **OpenAI 호환 API**(`/chat/completions`, `/completions`, `/embeddings`)로 노출합니다. 엔드포인트는 ML API Gateway 뒤에 위치하며, 기본 경로는 `https://<PAIS FQDN>/api/v1/compatibility/openai/v1/...`입니다([근거: Private AI Services API](https://developer.broadcom.com/xapis/vmware-private-ai-service-api/latest/), 호출 예시는 [08 8.8절, 8.10절](08-agent-builder.md)).
 
@@ -32,7 +32,7 @@ PAIS 3.0 Model Runtime이 지원하는 추론 엔진과 버전입니다([근거:
 - **엔진 버전 오버라이드** — 모델 엔드포인트 정의(YAML)의 `engineImage`로 엔진 이미지를 지정할 수 있습니다.
 - **버전 정본** — 엔진 버전의 단일 기준은 [README 기반 버전표](../README.md#기반-버전)입니다. 본문과 용어집의 버전 표기는 그 요약이며, 갱신은 README 표를 기준으로 맞춥니다.
 
-## 10.3 Model Gallery — 모델 저장소
+## 10.3 Model Gallery. 모델 저장소
 
 **Model Gallery**는 모델 아티팩트의 중앙 저장소로, **Harbor**(OCI 호환 컨테이너 레지스트리)를 기반으로 Supervisor 서비스로 배포됩니다([근거: Private AI Services 상세 디자인](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/private-ai-platform-detailed-design/private-ai-services.html)). 모델을 프로젝트와 리포지토리 단위로 보관하며, 리포지토리별로 쓰기 권한을 관리합니다. (CLI, 일부 인자에서는 내부적으로 `model-store`라는 용어도 함께 사용됩니다.)
 
@@ -44,13 +44,13 @@ PAIS 3.0 Model Runtime이 지원하는 추론 엔진과 버전입니다([근거:
 
 > **경계 — 파인튜닝은 PAIS 밖** — Model Gallery는 모델을 **보관하고 반입**하지, 학습하지 않습니다. LoRA, 전체 파인튜닝 같은 도메인 적응 학습은 PAIS 범위 밖이며, 외부 학습 환경(DLVM, 전용 학습 파이프라인)에서 수행한 뒤 산출 모델을 `vcf pais models push`로 Gallery에 반입합니다(10.5절). 학습용 GPU, 노드 사이징은 [⑥ GPU 사이징](https://github.com/JaeHoYun/vcf-private-ai/blob/main/06-sizing-cost/docs/02-gpu-sizing.md), [①](https://github.com/JaeHoYun/vcf-private-ai/tree/main/01-infra)에 위임합니다.
 
-## 10.4 에어갭 반입 — Artifact Mirroring Tool
+## 10.4 에어갭 반입. Artifact Mirroring Tool
 
 PAIS는 **Artifact Mirroring Tool** 로 에어갭(외부망 차단) 환경에 모델과 아티팩트를 반입하는 경로를 제공합니다(PAIS 2.1에서 도입). 인터넷에 연결된 준비 환경에서 컨테이너 이미지, Helm 차트, 모델 파일을 미러링한 뒤, 격리망으로 옮겨 설치하고 운영합니다. [PAIS 릴리스 노트](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-0/private-ai-release-notes/vmware-private-ai-services-release-notes.html)는 NVIDIA GPU 모델 엔드포인트와 **에이전트를 포함한** 전체 Private AI 기능을 에어갭에서 운영할 수 있다고 명시합니다.
 
 > **CLI 주의** — Artifact Mirroring Tool은 pais CLI 플러그인의 **`vcf pais amt pull` / `vcf pais amt push`** 명령으로 수행합니다(`vcf plugin install pais`로 설치). 단 이 `vcf pais amt` 명령은 **VCF CLI 명령 레퍼런스 페이지에는 누락**되어 있고(거기에는 `vcf pais models`만 표기, 10.5절), PAIF **Disconnected Environment 배포 문서**에만 명시돼 있으니 해당 문서를 1차 근거로 삼으십시오. 에어갭 절차는 릴리스마다 달라질 수 있으니 적용 직전 공식 문서와 KB로 재확인하십시오. ([근거: Upload the Private AI Services Components to a Disconnected Environment](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-0/private-ai-foundation-9-x/deploying-private-ai-foundation-with-nvidia/installing-and-configuring-private-ai-services/upload-the-private-ai-services-components-to-a-disconnected-environment.html))
 
-## 10.5 CLI — `vcf pais models`
+## 10.5 CLI. `vcf pais models`
 
 작성 시점 공식 CLI 레퍼런스에서 PAIS 관련 명령은 **`vcf pais models` 그룹 하나**이며, 하위 명령은 다음 여섯입니다.
 
