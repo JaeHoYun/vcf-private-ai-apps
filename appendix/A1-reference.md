@@ -82,14 +82,14 @@
 
 작성 시점 1차 출처입니다. 기능, 버전, 동작은 릴리스마다 바뀌므로 적용 전 최신 공식 문서로 재확인하시기 바랍니다.
 
-- [Private AI Services 릴리스 노트 3.0, 2.1.2, 2.1 (Broadcom TechDocs, 9.1 문서 경로)](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-1/private-ai-release-notes/vmware-private-ai-services-release-notes.html)
-- [Private AI Services 릴리스 노트 2.1, 2.0.x (Broadcom TechDocs, 9.0 문서 경로)](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-0/private-ai-release-notes/vmware-private-ai-services-release-notes.html)
+- [Private AI Services 릴리스 노트 — 3.0, 2.1.2, 2.1 (Broadcom TechDocs, 9.1 문서 경로)](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-1/private-ai-release-notes/vmware-private-ai-services-release-notes.html)
+- [Private AI Services 릴리스 노트 — 2.1, 2.0.x (Broadcom TechDocs, 9.0 문서 경로)](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-0/private-ai-release-notes/vmware-private-ai-services-release-notes.html)
 - [Private AI Services 상세 디자인 (VCF 9.1 디자인 라이브러리)](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/design/design-library/private-ai-platform-detailed-design/private-ai-services.html)
 - [What is Private AI Services (Broadcom TechDocs)](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-0/private-ai-foundation-9-x/what-is-private-ai-services.html)
-- [에이전트 생성, Create an Agent for a Generative AI Application (Broadcom TechDocs)](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-0/private-ai-foundation-9-x/what-is-private-ai-services/deploy-an-agent-for-a-rag-application.html)
-- [VCF CLI v9 pais 명령 레퍼런스 (Broadcom TechDocs)](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-consumption/latest/consumer-interfaces-in-vcf/installing-and-using-vcf-cli-v9/command-reference2/pais2.html)
+- [에이전트 생성 — Create an Agent for a Generative AI Application (Broadcom TechDocs)](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-0/private-ai-foundation-9-x/what-is-private-ai-services/deploy-an-agent-for-a-rag-application.html)
+- [VCF CLI v9 — pais 명령 레퍼런스 (Broadcom TechDocs)](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-consumption/latest/consumer-interfaces-in-vcf/installing-and-using-vcf-cli-v9/command-reference2/pais2.html)
 - [Streamline, Simplify and Protect all your AI workloads with VCF 9.1 (blogs.vmware.com)](https://blogs.vmware.com/cloud-foundation/2026/05/05/streamline-simplify-and-protect-all-your-ai-workloads-with-vcf-9-1/)
-- [Model Gallery, JupyterLab Notebooks (blogs.vmware.com)](https://blogs.vmware.com/cloud-foundation/2026/02/26/model-gallery-how-to-use-jupyterlab-notebooks-to-simplify-model-deployment-and-management/)
+- [Model Gallery — JupyterLab Notebooks (blogs.vmware.com)](https://blogs.vmware.com/cloud-foundation/2026/02/26/model-gallery-how-to-use-jupyterlab-notebooks-to-simplify-model-deployment-and-management/)
 - [Private AI Services API 레퍼런스 (developer.broadcom.com)](https://developer.broadcom.com/xapis/vmware-private-ai-service-api/latest/)
 - [Share a Model with Other Private AI Services Instances (Broadcom TechDocs, 3.0)](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-1/what-is-private-ai-services/share-a-model-with-other-private-ai-services-instances.html)
 - [Connect to a Remote Model Running in the Cloud (Broadcom TechDocs, 3.0)](https://techdocs.broadcom.com/us/en/vmware-cis/private-ai/foundation-with-nvidia/9-1/what-is-private-ai-services/connect-to-a-remote-model-running-in-the-cloud.html)
@@ -109,12 +109,12 @@
 
 **실습과 구성 사례(공개 자료).** 본문에서 인용한 따라 하기용 자료입니다.
 
-- [Building your GenAI Agents on VCF with Private AI Services, 전체 파이프라인 데모 (blogs.vmware.com, 2025-08)](https://blogs.vmware.com/cloud-foundation/2025/08/26/vmware-private-ai-services-demo/)
+- [Building your GenAI Agents on VCF with Private AI Services — 전체 파이프라인 데모 (blogs.vmware.com, 2025-08)](https://blogs.vmware.com/cloud-foundation/2025/08/26/vmware-private-ai-services-demo/)
 - [How to Connect your VMware Private AI Services Agents to OpenWeb UI (blogs.vmware.com, 2025-08)](https://blogs.vmware.com/cloud-foundation/2025/08/15/how-to-connect-your-vmware-private-ai-services-agents-to-openweb-ui/)
 - [Activate VCF Private AI Services (blogs.vmware.com, 2026-01)](https://blogs.vmware.com/cloud-foundation/2026/01/15/activate-vcf-private-ai-services/)
 - [Deploying PAIS: Navigating Supervisor Networking Stack (blogs.vmware.com, 2026-06)](https://blogs.vmware.com/cloud-foundation/2026/06/11/deploying-vmware-cloud-foundation-private-ai-services-navigating-supervisor-networking-stack/)
 - [Keycloak OIDC+PKCE 구성 (williamlam.com, 2026-08)](https://williamlam.com/2026/08/configuring-oidc-with-pkce-in-keycloak-for-vcf-private-ai-services.html) | [Authentik IdP 구성 (williamlam.com, 2025-09)](https://williamlam.com/2025/09/ms-a2-vcf-9-0-lab-configuring-authentik-identity-provider-vmware-for-private-ai-services-pais.html)
-- [mcp-langgraph-vllm, LangGraph + 커스텀 MCP 서버 + vLLM 데모 (GitHub)](https://github.com/davgordo/mcp-langgraph-vllm)
+- [mcp-langgraph-vllm — LangGraph + 커스텀 MCP 서버 + vLLM 데모 (GitHub)](https://github.com/davgordo/mcp-langgraph-vllm)
 
 시리즈 형제 가이드는 [시리즈 허브](https://github.com/JaeHoYun/vcf-private-ai)에서 모두 볼 수 있습니다.
 
