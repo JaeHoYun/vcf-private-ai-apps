@@ -19,6 +19,7 @@ THEMES = {
         purple_fill="#fbefff", purple_stroke="#c297ff", purple_accent="#8250df",
         green_fill="#dafbe1", green_stroke="#4ac26b", green_accent="#1a7f37",
         orange_fill="#fff1e5", orange_stroke="#fb8f44", orange_accent="#bc4c00",
+        red_fill="#ffebe9", red_stroke="#ff8182", red_accent="#cf222e",
     ),
     "dark": dict(
         bg="#0d1117", text="#f0f6fc", muted="#9198a1", arrow="#9198a1", frame="#484f58",
@@ -27,6 +28,7 @@ THEMES = {
         purple_fill="#231c35", purple_stroke="#8957e5", purple_accent="#ab7df8",
         green_fill="#122a1c", green_stroke="#2f9e4f", green_accent="#3fb950",
         orange_fill="#2d1c0f", orange_stroke="#bd561d", orange_accent="#f0883e",
+        red_fill="#25171c", red_stroke="#da3633", red_accent="#f85149",
     ),
 }
 FONT = ("-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', "
@@ -294,8 +296,75 @@ def data_onboarding_zones(t):
     return d
 
 
+# 04: 신원이 표현되는 네 경계와 자체 앱 경로
+def identity_propagation_boundaries(t):
+    d = Diagram(1160, 416, "신원이 표현되는 네 경계와 자체 앱 경로",
+                "사용자 요청은 네 경계를 거친다. ① 사용자에서 BFF까지는 조직 IdP가 발급한 사용자 토큰(OIDC)으로 "
+                "사용자, 그룹, 테넌트가 전달된다. ② BFF에서 PAIS 에이전트와 모델까지는 서비스 토큰으로 호출하므로 "
+                "사용자 신원이 유실되고 PAIS는 호출한 앱만 확인한다. ③ PAIS에서 MCP 도구 서버까지는 정적 도구 토큰이라 "
+                "도구 서버는 PAIS가 호출했다는 것만 확인하고, ④ PAIS에서 지식베이스까지는 인스턴스와 네임스페이스 권한으로 "
+                "에이전트에 연결된 지식베이스 전체에 접근한다. 따라서 관리형 에이전트 경로의 도구와 지식베이스는 "
+                "에이전트의 모든 사용자에게 안전한 범위로 한정한다. 자체 앱 경로에서는 BFF가 토큰 교환으로 받은 "
+                "사용자 범위 토큰으로 사내 시스템과 커스텀 검색을 직접 호출한다.", t)
+
+    by, bh = 100, 76
+    ay = by + bh / 2
+
+    # 관리형 에이전트 경로: 사용자 신원이 전달되지 않는 구간
+    fx, fy, fw, fh = 548, 40, 588, 352
+    d.o.append(f'<rect x="{fx}" y="{fy}" width="{fw}" height="{fh}" rx="10" fill="{t["red_fill"]}" opacity="0.55"/>')
+    d.frame(fx, fy, fw, fh, "관리형 에이전트 경로 (패턴 A)", kind="red",
+            note="② 이후 사용자 신원이 전달되지 않음")
+
+    # 첫 줄: 사용자, BFF, PAIS, MCP 도구 서버
+    d.box(24, by, 110, bh, [("사용자", "title"), ("조직 IdP 로그인", "sub")])
+    d.box(230, by, 180, bh, [("BFF", "title"), ("사용자, 그룹, 테넌트 확인", "sub")], "blue")
+    px, pw = 580, 212
+    d.box(px, by, pw, bh, [("PAIS 에이전트, 모델", "title"), ("호출한 앱만 확인", "sub")], "orange")
+    mx, mw = 916, 200
+    d.box(mx, by, mw, bh, [("MCP 도구 서버", "title"), ("PAIS 호출 여부만 확인", "sub")])
+
+    # ① 사용자 토큰
+    d.arrow([(134, ay), (230, ay)])
+    d.label(140, ay - 12, "사용자 토큰", step=1)
+    d.label(162, ay + 20, "OIDC")
+    # ② 서비스 토큰과 유실 지점
+    d.arrow([(410, ay), (px, ay)])
+    d.label(418, ay - 12, "서비스 토큰", step=2)
+    d.badge(479, ay + 8, "사용자 신원 유실", "red", "middle")
+    # ③ 정적 도구 토큰
+    d.arrow([(px + pw, ay), (mx, ay)])
+    d.label(px + pw + 6, ay - 12, "정적 도구 토큰", step=3)
+    d.label(px + pw + 28, ay + 20, "도구 서버에 등록")
+
+    # ④ 인스턴스 권한으로 지식베이스 검색
+    ky = 280
+    d.cyl(px, ky, pw, 84, [("지식베이스 검색", "title"), ("에이전트에 연결된 전체", "sub")], "green")
+    kx = px + pw / 2
+    d.arrow([(kx, by + bh), (kx, ky)])
+    d.label(kx + 10, 226, ["인스턴스와", "네임스페이스 권한"], step=4)
+
+    # 설계 결론
+    d.box(828, ky, 288, 84, [("설계 결론", "title"), ("도구와 지식베이스는 에이전트의", "sub"),
+                             ("모든 사용자에게 안전한 범위로 한정", "sub")], "red", fill=False, dashed=True)
+
+    # 자체 앱 경로
+    d.frame(24, 250, 480, 142, "자체 앱 경로 (패턴 B)", kind="blue", tx=166)
+    b1x, b2x, bw2, sy = 40, 280, 208, 296
+    d.box(b1x, sy, bw2, 80, [("사내 시스템", "title"), ("사용자 권한으로 실행", "sub")])
+    d.box(b2x, sy, bw2, 80, [("커스텀 검색", "title"), ("pgvector, 그룹 클레임 필터", "sub")], "green")
+    tx_, jy = 320, 226
+    c1, c2 = b1x + bw2 / 2, b2x + bw2 / 2
+    d.arrow([(tx_, by + bh), (tx_, jy), (c1, jy), (c1, sy)])
+    d.arrow([(tx_, jy), (c2, jy), (c2, sy)])
+    d.label(tx_ + 10, 200, "사용자 범위 토큰")
+    d.label(tx_ + 10, 217, "토큰 교환(RFC 8693)")
+    return d
+
+
 DIAGRAMS = {
     "data-onboarding-zones": data_onboarding_zones,
+    "identity-propagation-boundaries": identity_propagation_boundaries,
 }
 
 if __name__ == "__main__":
