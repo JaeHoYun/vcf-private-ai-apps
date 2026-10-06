@@ -1,12 +1,12 @@
 # VCF Private AI 앱과 에이전트 서비스 가이드
 
-> **이 가이드를 읽기 전에** — 임베딩, 벡터, 토큰, RAG, 쿠버네티스(VKS) 같은 용어가 낯설다면, 먼저 [VCF Private AI 입문 (Primer)](https://github.com/JaeHoYun/vcf-private-ai/tree/main/00-foundations)에서 기초 어휘를 익히시길 권합니다. 이 가이드는 그 개념들을 이미 아는 것으로 전제합니다.
+> **이 가이드를 읽기 전에.** 임베딩, 벡터, 토큰, RAG, 쿠버네티스(VKS) 같은 용어가 낯설다면, 먼저 [VCF Private AI 입문 (Primer)](https://github.com/JaeHoYun/vcf-private-ai/tree/main/00-foundations)에서 기초 어휘를 익히시길 권합니다. 이 가이드는 그 개념들을 이미 아는 것으로 전제합니다.
 
 > VMware Cloud Foundation(VCF) 9.1.x Private AI Services(PAIS) 3.0을 기반으로 기업이 LLM 앱, RAG 앱, 배치 파이프라인, 에이전트 서비스를 **기획, 설계, 구축, 검증, 운영**하는 실행 계층 가이드
 
-[① 인프라](https://github.com/JaeHoYun/vcf-private-ai/tree/main/01-infra), [② VectorDB](https://github.com/JaeHoYun/vcf-private-ai/tree/main/02-vectordb), [③ 서빙 API](https://github.com/JaeHoYun/vcf-private-ai/tree/main/03-serving-api), [④ RAG](https://github.com/JaeHoYun/vcf-private-ai/tree/main/04-rag), [⑤ 보안과 거버넌스](https://github.com/JaeHoYun/vcf-private-ai/tree/main/05-security), [⑥ 사이징과 비용](https://github.com/JaeHoYun/vcf-private-ai/tree/main/06-sizing-cost), [⑦ 통합 설계](https://github.com/JaeHoYun/vcf-private-ai/tree/main/07-design)는 Private AI **플랫폼**을 구축하고 보호하고 산정하고 설계합니다. 이 시리즈가 아직 답하지 않은 질문이 있습니다 — **"이 플랫폼을 기반으로 실제 서비스 하나를, 기획부터 운영까지 어떻게 만들고 책임지나?"** 이 가이드가 그 답입니다.
+[① 인프라](https://github.com/JaeHoYun/vcf-private-ai/tree/main/01-infra), [② VectorDB](https://github.com/JaeHoYun/vcf-private-ai/tree/main/02-vectordb), [③ 서빙 API](https://github.com/JaeHoYun/vcf-private-ai/tree/main/03-serving-api), [④ RAG](https://github.com/JaeHoYun/vcf-private-ai/tree/main/04-rag), [⑤ 보안과 거버넌스](https://github.com/JaeHoYun/vcf-private-ai/tree/main/05-security), [⑥ 사이징과 비용](https://github.com/JaeHoYun/vcf-private-ai/tree/main/06-sizing-cost), [⑦ 통합 설계](https://github.com/JaeHoYun/vcf-private-ai/tree/main/07-design)는 Private AI **플랫폼**을 구축하고 보호하고 산정하고 설계합니다. 이 시리즈가 아직 답하지 않은 질문이 있습니다. **"이 플랫폼을 기반으로 실제 서비스 하나를, 기획부터 운영까지 어떻게 만들고 책임지나?"** 이 가이드가 그 답입니다.
 
-플랫폼(시리즈 ①–⑦)이 인프라팀과 플랫폼팀의 관점이라면, 이 가이드는 그 플랫폼을 **소비하는 쪽** — 서비스를 기획하는 담당자, 설계하는 아키텍트, 만드는 앱 팀, 출시를 심사하는 보안과 법무, 운영하는 팀 — 의 관점입니다. 에이전트는 이 가이드가 다루는 네 가지 서비스 유형(챗과 Q&A RAG, 문서 처리 배치, 기존 시스템에 내장하는 코파일럿, 에이전트) 중 하나이며, PAIS 3.0의 Agent Builder, MCP, Model Runtime으로 구현하는 방법은 구축 편(08–10)에서 그대로 다룹니다.
+플랫폼(시리즈 ①–⑦)이 인프라팀과 플랫폼팀의 관점이라면, 이 가이드는 그 플랫폼을 **소비하는 쪽**의 관점입니다. 서비스를 기획하는 담당자, 설계하는 아키텍트, 만드는 앱 팀, 출시를 심사하는 보안과 법무, 운영하는 팀이 여기에 해당합니다. 에이전트는 이 가이드가 다루는 네 가지 서비스 유형(챗과 Q&A RAG, 문서 처리 배치, 기존 시스템에 내장하는 코파일럿, 에이전트) 중 하나이며, PAIS 3.0의 Agent Builder, MCP, Model Runtime으로 구현하는 방법은 구축 편(08–10)에서 그대로 다룹니다.
 
 > **VCF Private AI 가이드 시리즈를 기반으로 하는 실행 계층 가이드**입니다. 시리즈 본편(①–⑦)은 [시리즈 허브](https://github.com/JaeHoYun/vcf-private-ai)에서, 상위 전략은 [AX 방법론](https://github.com/JaeHoYun/enterprise-ax-methodology)에서 다룹니다. 프로필의 **AX(전략) → Private AI(플랫폼) → 앱과 에이전트 서비스(실행)** 3단계 중 실행 편입니다. 에이전트 전용 9편 체제였던 이전 구조는 태그 [`baseline-agents-v1`](https://github.com/JaeHoYun/vcf-private-ai-apps/tree/baseline-agents-v1)에서 그대로 읽을 수 있습니다.
 
@@ -35,15 +35,15 @@
 
 > 번호는 서비스 수명주기 순서를 따르므로, 사이에 문서가 추가되어도 기존 번호는 바뀌지 않습니다.
 
-## 이 가이드의 관점 — 서비스 수명주기
+## 이 가이드의 관점. 서비스 수명주기
 
 플랫폼 편이 "무엇이 있는가"를 계층별로 설명한다면, 이 가이드는 서비스 하나를 기획해서 퇴역시킬 때까지의 순서를 따릅니다. 다섯 부로 나뉩니다.
 
-- **기획과 선정** — 어떤 업무에 적용해야 성과가 나는지, 위험 등급은 어느 수준인지, 어느 서비스 유형으로 구현할지 정합니다.
-- **설계** — 사용자 신원이 어디까지 전달되는지, 플랫폼의 게이트웨이와 쿼터를 어떻게 소비하는지, 어떤 데이터 소스를 어떤 조건으로 인입하는지, 사내 시스템에 쓰기까지 허용할지 설계합니다.
-- **구축** — Agent Builder, MCP 도구, 모델 서빙으로 구현하고 앱에 통합합니다.
-- **검증과 출시** — 서비스 단위 보안 준비, 평가 게이트, 출시 심사를 통과합니다.
-- **운영과 종료** — 관측, 업그레이드, 비용, 그리고 서비스 퇴역까지 책임집니다.
+- **기획과 선정.** 어떤 업무에 적용해야 성과가 나는지, 위험 등급은 어느 수준인지, 어느 서비스 유형으로 구현할지 정합니다.
+- **설계.** 사용자 신원이 어디까지 전달되는지, 플랫폼의 게이트웨이와 쿼터를 어떻게 소비하는지, 어떤 데이터 소스를 어떤 조건으로 인입하는지, 사내 시스템에 쓰기까지 허용할지 설계합니다.
+- **구축.** Agent Builder, MCP 도구, 모델 서빙으로 구현하고 앱에 통합합니다.
+- **검증과 출시.** 서비스 단위 보안 준비, 평가 게이트, 출시 심사를 통과합니다.
+- **운영과 종료.** 관측, 업그레이드, 비용, 그리고 서비스 퇴역까지 책임집니다.
 
 각 부의 문서는 플랫폼 편(①–⑦)의 해당 절로 딥링크합니다. 플랫폼이 제공하는 통제와 사실 관계는 그쪽이 정본이고, 이 가이드는 그것을 서비스 하나에 적용하는 순서와 판단을 다룹니다.
 
