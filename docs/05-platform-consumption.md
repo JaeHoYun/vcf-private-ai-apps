@@ -2,7 +2,7 @@
 
 [← 목차로](../README.md)
 
-플랫폼 편(①–⑦)은 PAIS를 구축하는 쪽의 문서입니다. 이 문서는 그 플랫폼을 **사용하는 쪽** — 새 앱 팀이 무엇을 신청해 무엇을 받고, 어떤 계약으로 모델을 호출하며, 토큰을 어떻게 아끼고 어떻게 정산되는가 — 를 한 문서로 정리합니다. 플랫폼 팀이 게이트웨이 계층을 어떻게 설계하는지는 [③ 05 5.7절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/05-auth-and-gateway.md)과 [⑦ D13](https://github.com/JaeHoYun/vcf-private-ai/blob/main/07-design/docs/06-decision-forks.md)이 정하고, 이 문서는 앱 팀이 그 결정을 어떻게 소비하는지를 다룹니다.
+플랫폼 편(①–⑦)은 PAIS를 구축하는 쪽의 문서입니다. 이 문서는 그 플랫폼을 **사용하는 쪽**의 관점에서, 새 앱 팀이 무엇을 신청해 무엇을 받고, 어떤 계약으로 모델을 호출하며, 토큰을 어떻게 아끼고 어떻게 정산되는가를 한 문서로 정리합니다. 플랫폼 팀이 게이트웨이 계층을 어떻게 설계하는지는 [③ 05 5.7절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/05-auth-and-gateway.md)과 [⑦ D13](https://github.com/JaeHoYun/vcf-private-ai/blob/main/07-design/docs/06-decision-forks.md)이 정하고, 이 문서는 앱 팀이 그 결정을 어떻게 소비하는지를 다룹니다.
 
 > 본 문서의 수치와 동작은 VCF 9.1.1 / PAIF 9.1.1 / PAIS 3.0 기준입니다(작성 2026-09). PAIS의 내장 게이트웨이에는 사용자나 키 단위의 레이트리밋과 토큰 예산 기능이 공식 문서로 확인되지 않으며, 2026-08 Explore에서 발표된 AI Gateway는 향후 릴리스입니다([00 0.6절](00-orientation.md)). 적용 전 최신 공식 문서로 재확인하시기 바랍니다.
 
@@ -14,15 +14,15 @@
 
 | 순서 | 무엇을 받나 | 어디서 | 앱 팀이 준비할 것 |
 |------|-------------|--------|-------------------|
-| 1 | **프로젝트와 네임스페이스** — VCF Automation의 Project와 그에 대응하는 vSphere 네임스페이스, 쿼터 등급, VPC, 기본 권한 | 플랫폼 팀의 온보딩 템플릿([⑦ 05 5.1.1절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/07-design/docs/05-tenancy-security.md), [① 07 7.3절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/01-infra/docs/07-gpuaas.md)) | 서비스 이름, 위험 등급([02 2.9절](02-use-cases.md)), 사용자 집단, 예상 동시 사용자와 월 요청 수 |
-| 2 | **모델 엔드포인트 접근** — 공유 모델 풀의 completion과 embedding 엔드포인트, 또는 전용 모델의 로컬 배포 | 공유 모델은 provider 인스턴스 관리자가 발급자 인증서와 자격증명을 전달([① 06 6.4.1절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/01-infra/docs/06-production.md)) | 필요한 모델(생성, 임베딩), 지연 목표, 원격 클라우드 모델 사용 여부(반출 정책 확인) |
-| 3 | **서비스 신원과 토큰** — 앱의 OIDC 클라이언트(Client Credentials) 등록, 사용자 인증용 클라이언트(Authorization Code + PKCE) | 조직 IdP 관리자와 PAIS 인스턴스 관리자([04 4.1절](04-identity-propagation.md), [③ 05](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/05-auth-and-gateway.md)) | 리다이렉트 URL, 필요한 그룹 클레임. API 토큰은 인스턴스 간 연결과 CLI에만 신청 |
-| 4 | **지식베이스** — 관리형 지식베이스 생성 권한과 데이터 소스 연결 | PAIS UI 또는 API. 데이터 소스는 소유 부서 승인 뒤 연결(설계 편의 데이터 소스 온보딩) | 데이터 소스 목록, 등급, 소유자 승인서, 조회 전용 여부([02 2.11절](02-use-cases.md)) |
-| 5 | **도구** — 사내 MCP 서버 등록과 도구 승인 | 등록, 승인, 소비의 3계층 직무 분리([⑤ 03 3.4절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/05-security/docs/03-identity-access.md), [09 9.4절](09-mcp-tools.md)) | 도구 목록과 작업 분류표([07 7.2절](07-integration-write-design.md)), 도구 서버의 자격증명 범위 |
-| 6 | **관측 연결** — OpenTelemetry 수집기 주소, Grafana 대시보드, 로그 보존 정책 | 플랫폼 관측 팀([14 14.2절](14-operations.md)) | 요청 ID 규약([04 4.7절](04-identity-propagation.md)), 앱 레벨 지표 |
-| 7 | **첫 호출** — 모델 목록 조회와 챗 컴플리션 한 번, 지식베이스 검색 한 번 | 앱의 스모크 테스트 | 실패 시 에스컬레이션 경로 |
+| 1 | **프로젝트와 네임스페이스.** VCF Automation의 Project와 그에 대응하는 vSphere 네임스페이스, 쿼터 등급, VPC, 기본 권한 | 플랫폼 팀의 온보딩 템플릿([⑦ 05 5.1.1절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/07-design/docs/05-tenancy-security.md), [① 07 7.3절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/01-infra/docs/07-gpuaas.md)) | 서비스 이름, 위험 등급([02 2.9절](02-use-cases.md)), 사용자 집단, 예상 동시 사용자와 월 요청 수 |
+| 2 | **모델 엔드포인트 접근.** 공유 모델 풀의 completion과 embedding 엔드포인트, 또는 전용 모델의 로컬 배포 | 공유 모델은 provider 인스턴스 관리자가 발급자 인증서와 자격증명을 전달([① 06 6.4.1절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/01-infra/docs/06-production.md)) | 필요한 모델(생성, 임베딩), 지연 목표, 원격 클라우드 모델 사용 여부(반출 정책 확인) |
+| 3 | **서비스 신원과 토큰.** 앱의 OIDC 클라이언트(Client Credentials) 등록, 사용자 인증용 클라이언트(Authorization Code + PKCE) | 조직 IdP 관리자와 PAIS 인스턴스 관리자([04 4.1절](04-identity-propagation.md), [③ 05](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/05-auth-and-gateway.md)) | 리다이렉트 URL, 필요한 그룹 클레임. API 토큰은 인스턴스 간 연결과 CLI에만 신청 |
+| 4 | **지식베이스.** 관리형 지식베이스 생성 권한과 데이터 소스 연결 | PAIS UI 또는 API. 데이터 소스는 소유 부서 승인 뒤 연결(설계 편의 데이터 소스 온보딩) | 데이터 소스 목록, 등급, 소유자 승인서, 조회 전용 여부([02 2.11절](02-use-cases.md)) |
+| 5 | **도구.** 사내 MCP 서버 등록과 도구 승인 | 등록, 승인, 소비의 3계층 직무 분리([⑤ 03 3.4절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/05-security/docs/03-identity-access.md), [09 9.4절](09-mcp-tools.md)) | 도구 목록과 작업 분류표([07 7.2절](07-integration-write-design.md)), 도구 서버의 자격증명 범위 |
+| 6 | **관측 연결.** OpenTelemetry 수집기 주소, Grafana 대시보드, 로그 보존 정책 | 플랫폼 관측 팀([14 14.2절](14-operations.md)) | 요청 ID 규약([04 4.7절](04-identity-propagation.md)), 앱 레벨 지표 |
+| 7 | **첫 호출.** 모델 목록 조회와 챗 컴플리션 한 번, 지식베이스 검색 한 번 | 앱의 스모크 테스트 | 실패 시 에스컬레이션 경로 |
 
-셀프서비스 카탈로그가 있으면 1과 2와 4는 앱 팀이 직접 신청합니다. 없는 조직이라면 이 표의 단계와 준비물을 티켓의 요청 항목으로 사용합니다. 어느 쪽이든 **플랫폼 팀과 앱 팀 사이의 지원 모델** — 장애 시 누구에게 어떻게 알리는가, 모델 교체와 업그레이드를 며칠 전에 통지하는가, 쿼터 증설 요청은 얼마나 걸리는가 — 를 온보딩 때 문서로 받아 두어야 운영 단계에서 다투지 않습니다([14](14-operations.md)).
+셀프서비스 카탈로그가 있으면 1과 2와 4는 앱 팀이 직접 신청합니다. 없는 조직이라면 이 표의 단계와 준비물을 티켓의 요청 항목으로 사용합니다. 어느 쪽이든 **플랫폼 팀과 앱 팀 사이의 지원 모델**을 온보딩 때 문서로 받아 두어야 운영 단계에서 다투지 않습니다([14](14-operations.md)). 지원 모델에는 장애 시 누구에게 어떻게 알리는지, 모델 교체와 업그레이드를 며칠 전에 통지하는지, 쿼터 증설 요청에 얼마나 걸리는지가 포함됩니다.
 
 온보딩은 다음 기준으로 기록하고 개선합니다.
 
@@ -34,7 +34,7 @@
 
 ## 5.2 게이트웨이 3계층을 앱 팀 관점에서
 
-앱이 모델을 호출할 때 거치는 경로는 최대 세 계층입니다. 어느 계층이 있고 없는지는 조직마다 다르지만, 앱이 의존하는 것은 항상 하나 — OpenAI 호환 API 계약 — 여야 합니다.
+앱이 모델을 호출할 때 거치는 경로는 최대 세 계층입니다. 어느 계층이 있고 없는지는 조직마다 다르지만, 앱이 의존하는 것은 항상 OpenAI 호환 API 계약 하나여야 합니다.
 
 | 계층 | 담당 | 앱에 보이는 것 |
 |------|------|----------------|
@@ -42,13 +42,13 @@
 | 1계층 AI 게이트웨이 | 키와 팀별 토큰 예산과 쿼터, 온프레미스와 클라우드 모델 라우팅과 폴백, 모델 별칭, 시맨틱 캐시, 가드레일 훅, 프롬프트와 응답 로깅, MCP 정책. 있을 수도 없을 수도 있음 | 키 발급처, 모델 별칭 목록, 예산 정책 |
 | 2계층 ML API Gateway(PAIS 내장 서빙 게이트웨이) | PAIS 자원의 인증과 인가, 복제본 로드밸런싱, 모델명 라우팅, 원격 모델 라우트 | `…/api/v1/compatibility/openai/v1` base URL |
 
-앱 팀이 지킬 규칙은 두 가지입니다. **OpenAI 호환 계약에만 의존합니다** — 특정 게이트웨이의 SDK나 확장 헤더에 의존하면 게이트웨이를 바꿀 때 앱도 수정해야 합니다. **모델은 별칭으로 부릅니다** — 앱 설정에 `chat-default`, `embed-default` 같은 별칭을 정의하고, 별칭이 어느 모델 리비전을 가리키는지는 게이트웨이(없으면 앱 설정 한 곳)가 정합니다. 모델 교체가 앱 코드 변경 없이 끝나야 [13 13.7절](13-evaluation-guardrails.md)의 회귀 게이트가 앱 배포와 분리됩니다.
+앱 팀이 지킬 규칙은 두 가지입니다. **OpenAI 호환 계약에만 의존합니다.** 특정 게이트웨이의 SDK나 확장 헤더에 의존하면 게이트웨이를 바꿀 때 앱도 수정해야 합니다. **모델은 별칭으로 부릅니다.** 앱 설정에 `chat-default`, `embed-default` 같은 별칭을 정의하고, 별칭이 어느 모델 리비전을 가리키는지는 게이트웨이(없으면 앱 설정 한 곳)가 정합니다. 모델 교체가 앱 코드 변경 없이 끝나야 [13 13.7절](13-evaluation-guardrails.md)의 회귀 게이트가 앱 배포와 분리됩니다.
 
 ## 5.3 1계층이 없는 조직과 있는 조직
 
 | | 1계층 AI 게이트웨이가 없는 조직 | 있는 조직 |
 |---|---|---|
-| 호출 빈도 통제 | **앱이 직접** — 백엔드에서 PAIS로 나가는 동시 요청 상한(세마포어), 사용자와 테넌트별 토큰버킷, 타임아웃과 서킷브레이커, 초과 시 큐잉이나 429 반환([③ 05 5.5절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/05-auth-and-gateway.md)) | 게이트웨이에 키별 한도를 요청하고, 앱은 429 처리와 백오프만 |
+| 호출 빈도 통제 | **앱이 직접.** 백엔드에서 PAIS로 나가는 동시 요청 상한(세마포어), 사용자와 테넌트별 토큰버킷, 타임아웃과 서킷브레이커, 초과 시 큐잉이나 429 반환([③ 05 5.5절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/05-auth-and-gateway.md)) | 게이트웨이에 키별 한도를 요청하고, 앱은 429 처리와 백오프만 |
 | 팀 예산 | 앱이 usage를 로깅해 자체 집계(5.4절) | 게이트웨이의 팀별 예산과 알림 |
 | 모델 혼용 | 앱 설정에서 별칭 매핑 관리 | 게이트웨이의 라우팅 정책 요청 |
 | 캐시 | 앱 안에서(5.5절) | 게이트웨이의 응답 캐시 정책 확인 |
@@ -60,23 +60,23 @@
 
 사내 추론은 종량 청구서가 발행되지 않으므로, 사용량을 드러내는 일은 플랫폼과 앱이 함께 해야 합니다.
 
-**usage 로깅 규약** — 모든 응답의 `usage` 필드를 호출 단위로 남깁니다. 필드는 팀, 서비스, 사용자(해시), 모델 별칭과 실제 모델, 연결 방식(로컬, 공유, 원격), 프롬프트 토큰, 완성 토큰, 지연, 요청 ID입니다. 연결 방식을 남기는 이유는 회계가 다르기 때문입니다. 로컬과 공유 모델의 토큰은 쇼백의 배분 기준이고, 원격 클라우드 모델의 토큰은 공급자 청구서로 실제로 지출되는 비용이자 반출 증빙입니다([③ 07 7.1절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/07-observability-ops.md)).
+**usage 로깅 규약.** 모든 응답의 `usage` 필드를 호출 단위로 남깁니다. 필드는 팀, 서비스, 사용자(해시), 모델 별칭과 실제 모델, 연결 방식(로컬, 공유, 원격), 프롬프트 토큰, 완성 토큰, 지연, 요청 ID입니다. 연결 방식을 남기는 이유는 회계가 다르기 때문입니다. 로컬과 공유 모델의 토큰은 쇼백의 배분 기준이고, 원격 클라우드 모델의 토큰은 공급자 청구서로 실제로 지출되는 비용이자 반출 증빙입니다([③ 07 7.1절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/07-observability-ops.md)).
 
-**예산과 한도** — 팀마다 월 토큰 상한과 소프트 한도(예: 80%에서 알림)를 정하고, 초과 시의 동작(알림만, 저비용 모델로 강등, 스로틀)을 서비스의 위험 등급에 맞춰 정합니다. 1계층이 없으면 앱이 자체 집계로 같은 규칙을 직접 구현합니다. 배치 파이프라인은 온라인 서비스와 예산을 나눕니다([03 3.7절](03-design-patterns.md)).
+**예산과 한도.** 팀마다 월 토큰 상한과 소프트 한도(예: 80%에서 알림)를 정하고, 초과 시의 동작(알림만, 저비용 모델로 강등, 스로틀)을 서비스의 위험 등급에 맞춰 정합니다. 1계층이 없으면 앱이 자체 집계로 같은 규칙을 직접 구현합니다. 배치 파이프라인은 온라인 서비스와 예산을 나눕니다([03 3.7절](03-design-patterns.md)).
 
-**쇼백에서 차지백으로** — 첫 단계는 쇼백(팀별 사용량을 보여 주기)이고, GPU 단위 미터링이 검증된 뒤에 차지백(실제 정산)으로 전환합니다. 플랫폼이 GPU 지표를 네임스페이스 단위로 집계하고 앱이 토큰 지표를 서비스 단위로 남기면 둘을 합쳐 대시보드를 구성할 수 있습니다([① 07 7.6절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/01-infra/docs/07-gpuaas.md), [⑦ 05 5.1.1절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/07-design/docs/05-tenancy-security.md)). 단위 경제(요청당, 유스케이스당 월 비용)의 점검 기준은 [⑥ 07 7.9절 운영 중 AI 지출 점검 기준](https://github.com/JaeHoYun/vcf-private-ai/blob/main/06-sizing-cost/docs/07-tco-cost-model.md#79-운영-중-ai-지출-점검-기준-ai-finops)의 단위경제 점검축에 있고, 비용을 활동이 아니라 가치에 견주어 보고하는 관점은 [AX 08 8.4절](https://github.com/JaeHoYun/enterprise-ax-methodology/blob/main/docs/08-scale-and-next.md)에 있습니다.
+**쇼백에서 차지백으로.** 첫 단계는 쇼백(팀별 사용량을 보여 주기)이고, GPU 단위 미터링이 검증된 뒤에 차지백(실제 정산)으로 전환합니다. 플랫폼이 GPU 지표를 네임스페이스 단위로 집계하고 앱이 토큰 지표를 서비스 단위로 남기면 둘을 합쳐 대시보드를 구성할 수 있습니다([① 07 7.6절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/01-infra/docs/07-gpuaas.md), [⑦ 05 5.1.1절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/07-design/docs/05-tenancy-security.md)). 단위 경제(요청당, 유스케이스당 월 비용)의 점검 기준은 [⑥ 07 7.9절 운영 중 AI 지출 점검 기준](https://github.com/JaeHoYun/vcf-private-ai/blob/main/06-sizing-cost/docs/07-tco-cost-model.md#79-운영-중-ai-지출-점검-기준-ai-finops)의 단위경제 점검축에 있고, 비용을 활동이 아니라 가치에 견주어 보고하는 관점은 [AX 08 8.4절](https://github.com/JaeHoYun/enterprise-ax-methodology/blob/main/docs/08-scale-and-next.md)에 있습니다.
 
 ## 5.5 앱 수준 토큰 절감
 
 측정만으로 비용이 줄지는 않습니다. 앱이 사용할 수 있는 절감 수단은 다음과 같고, 대부분은 게이트웨이가 없어도 됩니다.
 
-- **컨텍스트 예산 규율** — 시스템 프롬프트, 근거 청크, 대화 이력, 질문, 출력 여유의 합이 창 크기 이내여야 하며, 초과 시 Top-K 축소, 청크 크기 조정, 이력 요약의 순서로 줄입니다([④ 03](https://github.com/JaeHoYun/vcf-private-ai/blob/main/04-rag/docs/03-retrieval-context.md), [03 3.4절](03-design-patterns.md)). 한국어는 같은 내용에 토큰이 더 많이 필요하므로 영어 기준 예산을 그대로 적용하면 초과합니다([10](10-models-serving.md)).
-- **고정 프리픽스를 앞에** — 시스템 프롬프트와 자주 사용하는 지시문처럼 요청마다 같은 부분을 프롬프트의 맨 앞에 배치하면, 추론 엔진의 프리픽스 캐싱이 같은 앞부분의 계산을 재사용할 수 있습니다. 어떤 캐싱이 켜져 있는지는 Model Runtime의 엔진 설정에 달려 있으므로 플랫폼 팀에 확인합니다([③ 07 7.8절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/07-observability-ops.md)). 앱 쪽에서 할 일은 프롬프트의 가변 부분(사용자 질문, 검색 결과)을 뒤로 보내는 것뿐입니다.
-- **응답 캐시** — 같은 질문이 반복되는 FAQ성 서비스는 정확 일치 캐시로, 표현이 조금씩 다른 질문은 임베딩 유사도로 맞추는 시맨틱 캐시로 줄입니다. 시맨틱 캐시는 온프레미스 임베딩 엔드포인트와 Redis나 pgvector가 필요합니다. 조건이 있습니다. 사용자 범위 데이터가 포함된 응답은 캐시하지 않거나 사용자 단위로만 캐시하고, 지식베이스가 갱신되면 캐시를 비웁니다.
-- **max_tokens 규율** — 출력 상한을 용도별로 정합니다. 분류와 추출은 짧게, 요약은 입력 길이에 비례해. 상한이 없으면 모델이 길게 답하는 만큼 비용과 지연이 늘고, 너무 짧으면 JSON이 잘립니다([③ 03](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/03-openai-compatible-endpoints.md)).
-- **스트리밍과 조기 종료** — 스트리밍은 체감 지연을 줄일 뿐 아니라, 사용자가 화면을 떠났을 때 연결을 끊어 생성을 멈출 기회를 줍니다. 클라이언트 연결이 끊겼을 때 엔진이 생성을 중단하는지는 플랫폼에서 확인합니다.
-- **임베딩 배치** — 인덱싱과 배치 파이프라인의 임베딩 호출은 여러 문서를 한 번에 모아 보냅니다. 건별 호출은 처리량을 낭비합니다.
-- **모델 크기 맞추기** — 저난도 과업(분류, 추출, 라우팅)에 큰 모델을 사용하지 않습니다. 별칭을 용도별로 나누면(`chat-default`, `classify-small`) 별칭 설정에서 더 작은 모델로 교체해도 앱은 그대로입니다.
+- **컨텍스트 예산 규율.** 시스템 프롬프트, 근거 청크, 대화 이력, 질문, 출력 여유의 합이 창 크기 이내여야 하며, 초과 시 Top-K 축소, 청크 크기 조정, 이력 요약의 순서로 줄입니다([④ 03](https://github.com/JaeHoYun/vcf-private-ai/blob/main/04-rag/docs/03-retrieval-context.md), [03 3.4절](03-design-patterns.md)). 한국어는 같은 내용에 토큰이 더 많이 필요하므로 영어 기준 예산을 그대로 적용하면 초과합니다([10](10-models-serving.md)).
+- **고정 프리픽스를 앞에.** 시스템 프롬프트와 자주 사용하는 지시문처럼 요청마다 같은 부분을 프롬프트의 맨 앞에 배치하면, 추론 엔진의 프리픽스 캐싱이 같은 앞부분의 계산을 재사용할 수 있습니다. 어떤 캐싱이 켜져 있는지는 Model Runtime의 엔진 설정에 달려 있으므로 플랫폼 팀에 확인합니다([③ 07 7.8절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/07-observability-ops.md)). 앱 쪽에서 할 일은 프롬프트의 가변 부분(사용자 질문, 검색 결과)을 뒤로 보내는 것뿐입니다.
+- **응답 캐시.** 같은 질문이 반복되는 FAQ성 서비스는 정확 일치 캐시로, 표현이 조금씩 다른 질문은 임베딩 유사도로 맞추는 시맨틱 캐시로 줄입니다. 시맨틱 캐시는 온프레미스 임베딩 엔드포인트와 Redis나 pgvector가 필요합니다. 조건이 있습니다. 사용자 범위 데이터가 포함된 응답은 캐시하지 않거나 사용자 단위로만 캐시하고, 지식베이스가 갱신되면 캐시를 비웁니다.
+- **max_tokens 규율.** 출력 상한을 용도별로 정합니다. 분류와 추출은 짧게, 요약은 입력 길이에 비례해. 상한이 없으면 모델이 길게 답하는 만큼 비용과 지연이 늘고, 너무 짧으면 JSON이 잘립니다([③ 03](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/03-openai-compatible-endpoints.md)).
+- **스트리밍과 조기 종료.** 스트리밍은 체감 지연을 줄일 뿐 아니라, 사용자가 화면을 떠났을 때 연결을 끊어 생성을 멈출 기회를 줍니다. 클라이언트 연결이 끊겼을 때 엔진이 생성을 중단하는지는 플랫폼에서 확인합니다.
+- **임베딩 배치.** 인덱싱과 배치 파이프라인의 임베딩 호출은 여러 문서를 한 번에 모아 보냅니다. 건별 호출은 처리량을 낭비합니다.
+- **모델 크기 맞추기.** 저난도 과업(분류, 추출, 라우팅)에 큰 모델을 사용하지 않습니다. 별칭을 용도별로 나누면(`chat-default`, `classify-small`) 별칭 설정에서 더 작은 모델로 교체해도 앱은 그대로입니다.
 
 ## 5.6 이너소스. 프롬프트, 도구, 평가셋의 공유
 
@@ -94,8 +94,8 @@
 
 Broadcom이 발표한 AI Gateway(프롬프트 라우팅, 사용자 단위 토큰 제한, OpenID Connect 기반 앱 인가)는 향후 릴리스이고 시점이 공개되지 않았습니다([00 0.6절](00-orientation.md)). 앱 팀 관점에서 지금 정해 두면 나중에 싸게 바뀌는 것과 바뀌지 않는 것을 나눕니다.
 
-- **바뀌지 않는 것** — OpenAI 호환 계약, 모델 별칭, usage 로깅 규약, OpenTelemetry로 통일한 추적. 이 넷을 지켰다면 1계층이 오픈소스 게이트웨이에서 Broadcom AI Gateway로 바뀌어도 앱은 설정만 바꿉니다.
-- **바뀌는 것** — 키와 예산을 요청하는 곳, 라우팅 정책을 정하는 곳, 앱이 직접 하던 호출 빈도 통제의 일부. 출시 시 확인할 점검표(키와 팀 예산, 시맨틱 캐시, 가드레일 훅, MCP 정책, 클라우드 라우팅, OpenTelemetry 호환)는 [③ 05 5.7절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/05-auth-and-gateway.md)에 있습니다.
+- **바뀌지 않는 것.** OpenAI 호환 계약, 모델 별칭, usage 로깅 규약, OpenTelemetry로 통일한 추적. 이 넷을 지켰다면 1계층이 오픈소스 게이트웨이에서 Broadcom AI Gateway로 바뀌어도 앱은 설정만 바꿉니다.
+- **바뀌는 것.** 키와 예산을 요청하는 곳, 라우팅 정책을 정하는 곳, 앱이 직접 하던 호출 빈도 통제의 일부. 출시 시 확인할 점검표(키와 팀 예산, 시맨틱 캐시, 가드레일 훅, MCP 정책, 클라우드 라우팅, OpenTelemetry 호환)는 [③ 05 5.7절](https://github.com/JaeHoYun/vcf-private-ai/blob/main/03-serving-api/docs/05-auth-and-gateway.md)에 있습니다.
 
 ## 5.8 결정 기록
 
