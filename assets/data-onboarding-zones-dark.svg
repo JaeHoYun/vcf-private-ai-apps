@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="992" viewBox="0 0 1160 992" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', 'Noto Sans CJK KR', Helvetica, Arial, sans-serif" role="img" aria-labelledby="t d">
+<title id="t">데이터 소스 온보딩의 여섯 개 존</title>
+<desc id="d">존 1 분산 소스 저장소의 문서를 존 2 수집 커넥터가 암호문 상태로 가져오고, 존 3 복호화 전처리(격리 구역)가 문서보안 서버와 키 서버에 전용 서비스 계정으로 요청해 복호화한 뒤 정규화, 형식 변환, OCR, PII 마스킹, 청킹, 접근 주체 평탄화를 거쳐 S3 호환 스테이징에 저장한다. 평문은 존 3 밖으로 나가지 않고, 등급과 허용 그룹이 붙은 청크만 존 4 인덱스 저장소로 전송된다. 존 4는 PAIS Data Indexing and Retrieval 또는 커스텀 pgvector이며 등급별 DSM PostgreSQL 인스턴스에 저장한다. 존 5의 앱과 BFF는 사용자 그룹 클레임으로 사전 필터해 검색하고 출력 통제를 거쳐 답을 제시한다. 존 6은 복호화 로그, 검색 로그, LLM 추적을 중앙 수집하고, 문서보안 서버의 정책 변경 이벤트를 받아 해당 청크를 즉시 비활성화한다.</desc>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9198a1"/></marker></defs>
+<rect x="24" y="24" width="1088" height="112" rx="10" fill="none" stroke="#484f58" stroke-width="1.5"/>
+<text x="38" y="46" font-size="13" font-weight="700" fill="#9198a1">존 1. 분산 소스 저장소 (기존 시스템)</text>
+<rect x="40" y="60" width="328" height="60" rx="8" fill="#151b23" stroke="#3d444d" stroke-width="1.5"/>
+<text x="204" y="86.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">문서관리시스템, 협업 포털</text>
+<text x="204" y="104.82" font-size="13" text-anchor="middle" fill="#9198a1">우선 대상</text>
+<rect x="404" y="60" width="328" height="60" rx="8" fill="#151b23" stroke="#3d444d" stroke-width="1.5"/>
+<text x="568" y="86.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">파일 서버, NAS</text>
+<text x="568" y="104.82" font-size="13" text-anchor="middle" fill="#9198a1">우선 대상</text>
+<rect x="768" y="60" width="328" height="60" rx="8" fill="#151b23" stroke="#3d444d" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="932" y="86.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">그룹웨어 첨부, 개인 PC</text>
+<text x="932" y="104.82" font-size="13" text-anchor="middle" fill="#9198a1">중앙 저장소로 모은 뒤 대상</text>
+<rect x="24" y="176" width="536" height="104" rx="10" fill="none" stroke="#484f58" stroke-width="1.5"/>
+<text x="38" y="198" font-size="13" font-weight="700" fill="#9198a1">존 2. 수집 (존 3과 같은 네임스페이스)</text>
+<rect x="40" y="212" width="504" height="52" rx="8" fill="#151b23" stroke="#3d444d" stroke-width="1.5"/>
+<text x="292" y="234.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">크롤러와 커넥터</text>
+<text x="292" y="252.82" font-size="13" text-anchor="middle" fill="#9198a1">변경 감지 커서, 중복 제거, 버전 관리</text>
+<path d="M300,120 L300,212" fill="none" stroke="#9198a1" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M500,120 L500,212" fill="none" stroke="#9198a1" stroke-width="1.5" marker-end="url(#ah)"/>
+<text x="290" y="160" font-size="12" text-anchor="end" fill="#9198a1" stroke="#0d1117" stroke-width="4" stroke-linejoin="round" paint-order="stroke">보호 문서는 암호문 상태로 수집</text>
+<rect x="600" y="192" width="400" height="72" rx="8" fill="#151b23" stroke="#3d444d" stroke-width="1.5"/>
+<text x="800" y="215.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">문서보안 서버, 키 서버</text>
+<text x="800" y="233.82" font-size="13" text-anchor="middle" fill="#9198a1">기존 시스템. 전용 서비스 계정과</text>
+<text x="800" y="251.82" font-size="13" text-anchor="middle" fill="#9198a1">허용 프로세스를 별도 정책으로 등록</text>
+<rect x="24" y="328" width="1088" height="156" rx="10" fill="none" stroke="#8957e5" stroke-width="2"/>
+<text x="258" y="350" font-size="13" font-weight="700" fill="#ab7df8">존 3. 복호화 전처리 (격리 VKS 클러스터나 네임스페이스, NSX 분산 방화벽)</text>
+<text x="1098" y="350" font-size="13" font-weight="700" text-anchor="end" fill="#ab7df8">평문은 이 존 밖으로 나가지 않음</text>
+<rect x="40" y="372" width="184" height="92" rx="8" fill="#231c35" stroke="#8957e5" stroke-width="1.5"/>
+<text x="132" y="405.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">복호화 워커</text>
+<text x="132" y="423.82" font-size="13" text-anchor="middle" fill="#9198a1">서비스 신원으로</text>
+<text x="132" y="441.82" font-size="13" text-anchor="middle" fill="#9198a1">문서 단위 권한 확인</text>
+<rect x="258" y="372" width="184" height="92" rx="8" fill="#231c35" stroke="#8957e5" stroke-width="1.5"/>
+<text x="350" y="414.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">정규화</text>
+<text x="350" y="432.82" font-size="13" text-anchor="middle" fill="#9198a1">형식 변환, OCR</text>
+<rect x="476" y="372" width="184" height="92" rx="8" fill="#231c35" stroke="#8957e5" stroke-width="1.5"/>
+<text x="568" y="405.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">PII 마스킹, 청킹</text>
+<text x="568" y="423.82" font-size="13" text-anchor="middle" fill="#9198a1">개인정보를 가린 뒤</text>
+<text x="568" y="441.82" font-size="13" text-anchor="middle" fill="#9198a1">청크로 분할</text>
+<rect x="694" y="372" width="184" height="92" rx="8" fill="#231c35" stroke="#8957e5" stroke-width="1.5"/>
+<text x="786" y="405.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">접근 주체 평탄화</text>
+<text x="786" y="423.82" font-size="13" text-anchor="middle" fill="#9198a1">정책을 허용 그룹 목록으로</text>
+<text x="786" y="441.82" font-size="13" text-anchor="middle" fill="#9198a1">비어 있으면 제한 처리</text>
+<path d="M912,376 A92,8 0 0 1 1096,376 V460 A92,8 0 0 1 912,460 Z" fill="#231c35" stroke="#8957e5" stroke-width="1.5"/>
+<path d="M912,376 A92,8 0 0 0 1096,376" fill="none" stroke="#8957e5" stroke-width="1.5"/>
+<text x="1004" y="422.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">스테이징</text>
+<text x="1004" y="440.82" font-size="13" text-anchor="middle" fill="#9198a1">S3 호환</text>
+<path d="M224,418 L258,418" fill="none" stroke="#9198a1" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M442,418 L476,418" fill="none" stroke="#9198a1" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M660,418 L694,418" fill="none" stroke="#9198a1" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M878,418 L912,418" fill="none" stroke="#9198a1" stroke-width="1.5" marker-end="url(#ah)"/>
+<text x="241" y="410" font-size="12" text-anchor="middle" fill="#9198a1" stroke="#0d1117" stroke-width="4" stroke-linejoin="round" paint-order="stroke">평문</text>
+<path d="M100,264 L100,372" fill="none" stroke="#9198a1" stroke-width="1.5" marker-end="url(#ah)"/>
+<text x="108" y="296" font-size="12" fill="#9198a1" stroke="#0d1117" stroke-width="4" stroke-linejoin="round" paint-order="stroke">암호문</text>
+<path d="M620,264 L620,304 L196,304 L196,372" fill="none" stroke="#9198a1" stroke-width="1.5" marker-end="url(#ah)" marker-start="url(#ah)"/>
+<text x="408" y="297" font-size="12" text-anchor="middle" fill="#9198a1" stroke="#0d1117" stroke-width="4" stroke-linejoin="round" paint-order="stroke">복호화와 키 요청</text>
+<rect x="600" y="528" width="512" height="248" rx="10" fill="none" stroke="#2f9e4f" stroke-width="2"/>
+<text x="614" y="550" font-size="13" font-weight="700" fill="#3fb950">존 4. 인덱스 저장 (등급별 분리)</text>
+<rect x="616" y="568" width="220" height="104" rx="8" fill="#122a1c" stroke="#2f9e4f" stroke-width="1.5"/>
+<text x="726" y="596.54" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">PAIS Data Indexing</text>
+<text x="726" y="617.54" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">and Retrieval</text>
+<text x="726" y="636.32" font-size="13" text-anchor="middle" fill="#9198a1">관리형 지식베이스</text>
+<text x="726" y="654.32" font-size="13" text-anchor="middle" fill="#9198a1">지식베이스와 인스턴스가 경계</text>
+<rect x="876" y="568" width="220" height="104" rx="8" fill="#122a1c" stroke="#2f9e4f" stroke-width="1.5"/>
+<text x="986" y="607.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">커스텀 pgvector</text>
+<text x="986" y="625.82" font-size="13" text-anchor="middle" fill="#9198a1">청크 메타데이터로</text>
+<text x="986" y="643.82" font-size="13" text-anchor="middle" fill="#9198a1">문서 단위 접근 주체 필터</text>
+<text x="856" y="625" font-size="13" font-weight="700" text-anchor="middle" fill="#9198a1">또는</text>
+<path d="M616,698 A240,8 0 0 1 1096,698 V752 A240,8 0 0 1 616,752 Z" fill="#122a1c" stroke="#2f9e4f" stroke-width="1.5"/>
+<path d="M616,698 A240,8 0 0 0 1096,698" fill="none" stroke="#2f9e4f" stroke-width="1.5"/>
+<text x="856" y="729.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">DSM PostgreSQL, pgvector</text>
+<text x="856" y="747.82" font-size="13" text-anchor="middle" fill="#9198a1">등급별 인스턴스 분리, vSAN 암호화 스토리지</text>
+<path d="M1004,468 L1004,528" fill="none" stroke="#9198a1" stroke-width="1.5" marker-end="url(#ah)"/>
+<text x="994" y="510" font-size="12" text-anchor="end" fill="#9198a1" stroke="#0d1117" stroke-width="4" stroke-linejoin="round" paint-order="stroke">등급과 허용 그룹이 붙은 청크</text>
+<rect x="24" y="568" width="116" height="192" rx="8" fill="#151b23" stroke="#3d444d" stroke-width="1.5"/>
+<text x="82" y="651.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">사용자</text>
+<text x="82" y="669.82" font-size="13" text-anchor="middle" fill="#9198a1">질문하고</text>
+<text x="82" y="687.82" font-size="13" text-anchor="middle" fill="#9198a1">답을 열람</text>
+<rect x="176" y="528" width="324" height="248" rx="10" fill="none" stroke="#1f6feb" stroke-width="2"/>
+<text x="190" y="550" font-size="13" font-weight="700" fill="#4493f8">존 5. 쿼리와 출력</text>
+<rect x="192" y="568" width="292" height="88" rx="8" fill="#11284a" stroke="#1f6feb" stroke-width="1.5"/>
+<text x="338" y="599.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">앱과 BFF</text>
+<text x="338" y="617.82" font-size="13" text-anchor="middle" fill="#9198a1">사용자 그룹 클레임으로 사전 필터</text>
+<text x="338" y="635.82" font-size="13" text-anchor="middle" fill="#9198a1">기본 거부, 필요 시 문서보안 재검증</text>
+<rect x="192" y="688" width="292" height="72" rx="8" fill="#11284a" stroke="#1f6feb" stroke-width="1.5"/>
+<text x="338" y="711.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">출력 통제</text>
+<text x="338" y="729.82" font-size="13" text-anchor="middle" fill="#9198a1">등급 표시, 복사와 공유 차단,</text>
+<text x="338" y="747.82" font-size="13" text-anchor="middle" fill="#9198a1">개인정보 마스킹, 유출 방지</text>
+<path d="M338,656 L338,688" fill="none" stroke="#9198a1" stroke-width="1.5" marker-end="url(#ah)"/>
+<path d="M140,600 L192,600" fill="none" stroke="#9198a1" stroke-width="1.5" marker-end="url(#ah)"/>
+<text x="158" y="592" font-size="12" text-anchor="middle" fill="#9198a1" stroke="#0d1117" stroke-width="4" stroke-linejoin="round" paint-order="stroke">질문</text>
+<path d="M192,736 L140,736" fill="none" stroke="#9198a1" stroke-width="1.5" marker-end="url(#ah)"/>
+<text x="158" y="728" font-size="12" text-anchor="middle" fill="#9198a1" stroke="#0d1117" stroke-width="4" stroke-linejoin="round" paint-order="stroke">답</text>
+<path d="M484,612 L600,612" fill="none" stroke="#9198a1" stroke-width="1.5" marker-end="url(#ah)" marker-start="url(#ah)"/>
+<text x="542" y="604" font-size="12" text-anchor="middle" fill="#9198a1" stroke="#0d1117" stroke-width="4" stroke-linejoin="round" paint-order="stroke">사전 필터 검색</text>
+<rect x="24" y="820" width="1088" height="124" rx="10" fill="none" stroke="#484f58" stroke-width="1.5"/>
+<text x="38" y="842" font-size="13" font-weight="700" fill="#9198a1">존 6. 감사와 수명주기</text>
+<rect x="136" y="856" width="576" height="72" rx="8" fill="#151b23" stroke="#3d444d" stroke-width="1.5"/>
+<text x="424" y="879.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">중앙 로그 수집</text>
+<text x="424" y="897.82" font-size="13" text-anchor="middle" fill="#9198a1">복호화 로그, 검색 로그, LLM 추적을 문서 ID로 연결</text>
+<text x="424" y="915.82" font-size="13" text-anchor="middle" fill="#9198a1">로그 저장소도 원문 등급 자산으로 관리</text>
+<rect x="760" y="856" width="336" height="72" rx="8" fill="#151b23" stroke="#3d444d" stroke-width="1.5"/>
+<text x="928" y="879.04" font-size="15" font-weight="700" text-anchor="middle" fill="#f0f6fc">수명주기 관리</text>
+<text x="928" y="897.82" font-size="13" text-anchor="middle" fill="#9198a1">권한 회수, 등급 상향, 문서 폐기 이벤트 수신</text>
+<text x="928" y="915.82" font-size="13" text-anchor="middle" fill="#9198a1">청크 즉시 비활성화, 세션 히스토리 무효화</text>
+<path d="M24,418 L12,418 L12,892 L136,892" fill="none" stroke="#9198a1" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+<text x="36" y="884" font-size="12" fill="#9198a1" stroke="#0d1117" stroke-width="4" stroke-linejoin="round" paint-order="stroke">복호화 로그</text>
+<path d="M338,760 L338,856" fill="none" stroke="#9198a1" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+<text x="348" y="804" font-size="12" fill="#9198a1" stroke="#0d1117" stroke-width="4" stroke-linejoin="round" paint-order="stroke">LLM 추적</text>
+<path d="M660,776 L660,856" fill="none" stroke="#9198a1" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+<text x="670" y="804" font-size="12" fill="#9198a1" stroke="#0d1117" stroke-width="4" stroke-linejoin="round" paint-order="stroke">검색 로그</text>
+<path d="M1000,228 L1140,228 L1140,892 L1096,892" fill="none" stroke="#9198a1" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+<text x="1070" y="220" font-size="12" text-anchor="middle" fill="#9198a1" stroke="#0d1117" stroke-width="4" stroke-linejoin="round" paint-order="stroke">정책 변경 이벤트</text>
+<path d="M928,856 L928,776" fill="none" stroke="#9198a1" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+<text x="938" y="804" font-size="12" fill="#9198a1" stroke="#0d1117" stroke-width="4" stroke-linejoin="round" paint-order="stroke">청크 즉시 비활성화</text>
+<rect x="24" y="964" width="18" height="14" rx="3" fill="#231c35" stroke="#8957e5" stroke-width="1.5"/>
+<text x="50" y="976" font-size="12" fill="#9198a1">평문이 존재하는 격리 구역</text>
+<rect x="227.6" y="964" width="18" height="14" rx="3" fill="#122a1c" stroke="#2f9e4f" stroke-width="1.5"/>
+<text x="253.6" y="976" font-size="12" fill="#9198a1">등급별로 분리한 인덱스</text>
+<rect x="412" y="964" width="18" height="14" rx="3" fill="#11284a" stroke="#1f6feb" stroke-width="1.5"/>
+<text x="438" y="976" font-size="12" fill="#9198a1">앱 계층</text>
+<rect x="505.2" y="964" width="18" height="14" rx="3" fill="none" stroke="#484f58" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="531.2" y="976" font-size="12" fill="#9198a1">중앙화 뒤에 대상</text>
+<path d="M653.6,971 L671.6,971" fill="none" stroke="#9198a1" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ah)"/>
+<text x="679.6" y="976" font-size="12" fill="#9198a1">감사 로그와 정책 변경 이벤트</text>
+</svg>
